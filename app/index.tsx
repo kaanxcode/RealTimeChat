@@ -5,12 +5,13 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
 const StartPage = () => {
   const router = useRouter();
+
   return (
     <SafeAreaView className="flex-1">
       <ImageBackground
@@ -38,7 +39,7 @@ const StartPage = () => {
           <View className="gap-3 w-full px-4">
             <TouchableOpacity
               className="bg-indigo-500 py-3 rounded-lg"
-              onPress={() => router.push("/(stack)/login")}
+              onPress={() => router.push("/login")}
             >
               <Text className="text-white text-center text-lg font-semibold">
                 Giriş Yap
@@ -47,7 +48,7 @@ const StartPage = () => {
 
             <TouchableOpacity
               className="border border-indigo-500 py-3 rounded-lg"
-              onPress={() => router.push("/(stack)/register")}
+              onPress={() => router.push("/register")}
             >
               <Text className="text-indigo-500 text-center text-lg font-semibold">
                 Kayıt Ol
