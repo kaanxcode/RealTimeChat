@@ -1,32 +1,23 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Image } from "react-native";
 import React from "react";
-import { logout } from "@/redux/slices/authSlice";
-import { useDispatch } from "react-redux";
-import { useRouter } from "expo-router"; // Yönlendirme için import edin
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Contacts = () => {
-  const dispatch = useDispatch();
-  const router = useRouter(); // Router'ı kullanın
-
-  const handleLogout = async () => {
-    const resultAction = await dispatch(logout());
-    if (logout.fulfilled.match(resultAction)) {
-      console.log("Logout successful");
-      // Logout başarılı olduğunda giriş sayfasına yönlendirin
-      router.replace("/login");
-    } else {
-      console.log("Logout failed:", resultAction.payload);
-      // Çıkış işlemi başarısızsa hata mesajını göster
-    }
-  };
-
   return (
-    <View>
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
-      <Text>Contacts</Text>
-    </View>
+    <SafeAreaView className="flex-1">
+      <View className="p-5">
+        <View className="flex-1 justify-center items-start">
+          <Image
+            source={require("@/assets/images/profile.jpeg")}
+            className="w-28 h-28 rounded-full"
+          />
+        </View>
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-2xl font-bold">Ho</Text>
+          <Text className="text-lg text-gray-500"></Text>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 

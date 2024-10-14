@@ -6,14 +6,26 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { auth } from "../../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 // Register
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ email, password }, { rejectWithValue }) => {
+  async ({ username, email, password, profileImg }, { rejectWithValue }) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await setDoc(doc(db, "users", response.user.uid), {
+        email,
+        username,
+        profileImg,
+        id: response.user.uid,
+      });
 
       return null;
     } catch (error) {
@@ -34,6 +46,8 @@ export const login = createAsyncThunk(
       );
 
       const token = userCredential.user.stsTokenManager.accessToken;
+      const userId = userCredential.user.uid;
+      await AsyncStorage.setItem("userId", userId);
       await AsyncStorage.setItem("userToken", token);
 
       return { token };

@@ -6,6 +6,7 @@ import Toast from "react-native-toast-message";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { autoLogin } from "../redux/slices/authSlice";
+import { Menu, MenuProvider } from "react-native-popup-menu";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -30,19 +31,22 @@ function MainLayout() {
 
 export default function RootLayout() {
   return (
-    <Provider store={store}>
-      <Stack screenOptions={{ animation: "fade" }}>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="register" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modals/forgot-pass"
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-      </Stack>
-      <MainLayout />
-      <Toast />
-    </Provider>
+    <MenuProvider>
+      <Provider store={store}>
+        <Stack screenOptions={{ animation: "fade" }}>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="register" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="stack" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="modals/forgot-pass"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+        </Stack>
+        <MainLayout />
+        <Toast />
+      </Provider>
+    </MenuProvider>
   );
 }
