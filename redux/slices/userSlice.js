@@ -1,7 +1,7 @@
-import { db, storage } from "@/firebaseConfig";
+import { auth, db, storage } from "@/firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
@@ -30,17 +30,24 @@ export const fetchUserData = createAsyncThunk(
   }
 );
 // Kullanıcı bilgilerini Firestore'da güncelleme
-export const updateUsername = createAsyncThunk(
+export const updateUserData = createAsyncThunk(
   "user/updateUserData",
-  async ({ username }, { rejectWithValue }) => {
+  async ({ username, profileImg, field }, { rejectWithValue }) => {
     try {
       const userId = await AsyncStorage.getItem("userId");
       const userRef = doc(db, "users", userId);
-      await updateDoc(userRef, {
-        username,
-      });
 
-      return username;
+      if (field === "username") {
+        await updateDoc(userRef, {
+          username,
+        });
+        return { username };
+      } else if (field === "profileImg") {
+        await updateDoc(userRef, {
+          profileImg,
+        });
+        return { profileImg };
+      }
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -50,20 +57,16 @@ export const updateUsername = createAsyncThunk(
 // Profil resmini Firebase Storage'a yükleme ve Firestore'da güncelleme
 export const updateProfilePicture = createAsyncThunk(
   "user/updateProfilePicture",
-  async ({ userId, imageFile }, { rejectWithValue }) => {
+  async ({ userId, imageUri }, { rejectWithValue }) => {
     try {
-      // Storage'a yükleme işlemi
-      const storageRef = ref(storage, `profile_pictures/${userId}`);
-      await uploadBytes(storageRef, imageFile);
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
 
-      // Yüklenen resmin URL'ini al
-      const downloadURL = await getDownloadURL(storageRef);
+      const storageRef = ref(storage, `Images/${userId}`);
 
-      // Firestore'da profil resmi URL'ini güncelle
-      await firestore.collection("users").doc(userId).update({
-        profilePicture: downloadURL,
-      });
+      const snapshot = await uploadBytes(storageRef, blob);
 
+      const downloadURL = await getDownloadURL(snapshot.ref);
       return downloadURL;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -97,15 +100,28 @@ const userSlice = createSlice({
 
     // updateUserData durumları
     builder
-      .addCase(updateUsername.pending, (state) => {
+      .addCase(updateUserData.pending, (state) => {
         state.isLoading = true;
         state.errorMessage = null;
       })
-      .addCase(updateUsername.fulfilled, (state, action) => {
+      .addCase(updateUserData.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userData = { ...state.userData, username: action.payload };
+
+        if (action.payload.username) {
+          state.userData = {
+            ...state.userData,
+            username: action.payload.username,
+          };
+        }
+
+        if (action.payload.profileImg) {
+          state.userData = {
+            ...state.userData,
+            profileImg: action.payload.profileImg,
+          };
+        }
       })
-      .addCase(updateUsername.rejected, (state, action) => {
+      .addCase(updateUserData.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMessage = action.payload;
       });
@@ -118,9 +134,6 @@ const userSlice = createSlice({
       })
       .addCase(updateProfilePicture.fulfilled, (state, action) => {
         state.isLoading = false;
-        if (state.userData) {
-          state.userData.profilePicture = action.payload; // Profil resmi URL'ini güncelle
-        }
       })
       .addCase(updateProfilePicture.rejected, (state, action) => {
         state.isLoading = false;

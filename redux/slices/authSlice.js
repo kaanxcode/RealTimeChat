@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { auth, db } from "../../firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 
 // Register
 export const register = createAsyncThunk(
@@ -116,6 +116,31 @@ export const autoLogin = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  "user/deleteUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      if (!userId) {
+        throw new Error("No user ID found in AsyncStorage");
+      }
+
+      await AsyncStorage.removeItem("userId");
+      await AsyncStorage.removeItem("userToken");
+      await deleteDoc(doc(db, "users", userId));
+
+      const user = auth.currentUser;
+      if (user) {
+        await user.delete();
+      } else {
+        throw new Error("No authenticated user found");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // Auth slice
 export const authSlice = createSlice({
   name: "auth",
@@ -141,7 +166,8 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = false;
         state.errorMessage = action.payload;
-      })
+      });
+    builder
       .addCase(login.pending, (state) => {
         state.isLoading = true;
         state.errorMessage = null;
@@ -155,6 +181,10 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = false;
         state.errorMessage = action.payload;
+      });
+    builder
+      .addCase(logout.pending, (state) => {
+        state.isLoading = true;
       })
       .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
@@ -164,7 +194,8 @@ export const authSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMessage = action.payload;
-      })
+      });
+    builder
       .addCase(resetPassword.pending, (state) => {
         state.isLoading = true;
         state.errorMessage = null;
@@ -175,12 +206,27 @@ export const authSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMessage = action.payload;
+      });
+    builder.addCase(autoLogin.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+      }
+    });
+    builder
+      .addCase(deleteUser.pending, (state) => {
+        state.isLoading = true;
+        state.errorMessage = null;
       })
-      .addCase(autoLogin.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.isAuthenticated = true;
-          state.token = action.payload.token;
-        }
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.token = null;
+        state.errorMessage = null;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errorMessage = action.payload;
       });
   },
 });

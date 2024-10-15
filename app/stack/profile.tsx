@@ -1,30 +1,35 @@
-import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
-import React, { useState } from "react";
-import Feather from "@expo/vector-icons/Feather";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useDispatch, useSelector } from "react-redux";
-import Toast from "react-native-toast-message";
-import { updateUsername } from "@/redux/slices/userSlice";
 import LoadingComponent from "@/components/LoadingComponent";
+import { deleteUser } from "@/redux/slices/authSlice";
+import { updateUserData } from "@/redux/slices/userSlice";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  Alert,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { userData, isLoading, errorMessage } = useSelector(
-    (state) => state.user
-  );
+  const { userData, isLoading } = useSelector((state) => state.user);
 
   const [showInput, setShowInput] = useState(false);
   const [username, setUsername] = useState("");
 
-  const handleChangeProfileImage = () => {
-    console.log("change profile image");
-  };
-
   const handleChangeUsername = async () => {
     try {
       if (username !== "") {
-        await dispatch(updateUsername({ username })).unwrap();
+        const field = "username";
+        await dispatch(updateUserData({ username, field })).unwrap();
         setShowInput(false);
         setUsername("");
       } else {
@@ -44,12 +49,29 @@ const Profile = () => {
   };
 
   const handeDeleteUser = () => {
-    console.log("delete user");
+    Alert.alert(
+      "Hesabınızı silmek istediğinize emin misiniz?",
+      "Bu işlem geri alınamaz.",
+      [
+        {
+          text: "Vazgeç",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Evet",
+          onPress: async () => {
+            await dispatch(deleteUser()).unwrap();
+            router.replace("/login");
+          },
+        },
+      ]
+    );
   };
 
   if (isLoading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center ">
         <LoadingComponent size={60} />
       </View>
     );
@@ -62,7 +84,10 @@ const Profile = () => {
           source={{ uri: userData?.profileImg }}
           className="w-28 h-28 rounded-full"
         />
-        <TouchableOpacity onPress={handleChangeProfileImage} className="mt-4">
+        <TouchableOpacity
+          onPress={() => router.push("/modals/image-pick-and-upload")}
+          className="mt-4"
+        >
           <Text className="text-indigo-500 text-lg font-medium">
             Profil resmini değiştir
           </Text>
@@ -72,7 +97,7 @@ const Profile = () => {
       <View className="gap-4">
         <View className="h-16 flex-row items-center px-4 bg-neutral-100 rounded-2xl">
           <Text className="text-xl font-medium text-zinc-600">
-            {userData.email}
+            {userData?.email}
           </Text>
         </View>
 
@@ -98,7 +123,7 @@ const Profile = () => {
         ) : (
           <View className="h-16 flex-row items-center justify-between px-4 bg-neutral-100 rounded-2xl">
             <Text className="text-xl font-medium text-zinc-600">
-              {userData.username}
+              {userData?.username}
             </Text>
             <TouchableOpacity onPress={() => setShowInput(true)}>
               <Feather name="edit-3" size={24} color="gray" />

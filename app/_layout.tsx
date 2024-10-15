@@ -43,6 +43,10 @@ export default function RootLayout() {
             name="modals/forgot-pass"
             options={{ headerShown: false, presentation: "modal" }}
           />
+          <Stack.Screen
+            name="modals/image-pick-and-upload"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
         </Stack>
         <MainLayout />
         <Toast />
