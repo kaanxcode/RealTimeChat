@@ -1,7 +1,8 @@
-import { View, Text } from "react-native";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import PlusButtonComponent from "@/components/PlusButtonComponent";
 import { fetchUserData } from "@/redux/slices/userSlice";
+import React, { useEffect } from "react";
+import { View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 const Chats = () => {
   const { userData, isLoading, errorMessage } = useSelector(
@@ -14,11 +15,8 @@ const Chats = () => {
   }, [dispatch]);
 
   return (
-    <View>
-      <Text>Chats Page</Text>
-      {isLoading && <Text>Yükleniyor...</Text>}
-      {errorMessage && <Text>{errorMessage}</Text>}
-      {userData && <Text>Kullanıcı: {userData.username}</Text>}
+    <View className="flex-1 bg-zinc-100">
+      <PlusButtonComponent />
     </View>
   );
 };

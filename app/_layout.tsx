@@ -1,12 +1,12 @@
+import StackHeaderComponent from "@/components/StackHeaderComponent";
 import { Stack, useRouter } from "expo-router";
-import "../global.css";
-import store from "../redux/store";
-import { Provider } from "react-redux";
+import { useEffect } from "react";
+import { MenuProvider } from "react-native-popup-menu";
 import Toast from "react-native-toast-message";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import "../global.css";
 import { autoLogin } from "../redux/slices/authSlice";
-import { Menu, MenuProvider } from "react-native-popup-menu";
+import store from "../redux/store";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -46,6 +46,14 @@ export default function RootLayout() {
           <Stack.Screen
             name="modals/image-pick-and-upload"
             options={{ headerShown: false, presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="modals/search"
+            options={{
+              presentation: "modal",
+              animation: "slide_from_bottom",
+              header: () => <StackHeaderComponent title="Kullanıcılar" />,
+            }}
           />
         </Stack>
         <MainLayout />

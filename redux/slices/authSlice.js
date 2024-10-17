@@ -1,13 +1,13 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail,
 } from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { auth, db } from "../../firebaseConfig";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 
 // Register
 export const register = createAsyncThunk(
@@ -25,6 +25,9 @@ export const register = createAsyncThunk(
         username,
         profileImg,
         id: response.user.uid,
+      });
+      await setDoc(doc(db, "userChats", response.user.uid), {
+        chats: [],
       });
 
       return null;
@@ -187,6 +190,7 @@ export const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(logout.fulfilled, (state) => {
+        state.isLoading = false;
         state.isAuthenticated = false;
         state.token = null;
         state.errorMessage = null;

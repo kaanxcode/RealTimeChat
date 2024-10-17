@@ -1,29 +1,37 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Feather from "@expo/vector-icons/Feather";
-import { Tabs } from "expo-router";
 import HeaderComponents from "@/components/HeaderComponents";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Tabs } from "expo-router";
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: "#3F51B5" }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Chats",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+          title: "",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              size={28}
+              name={focused ? "chatbubbles-sharp" : "chatbubbles-outline"}
+              color={color}
+            />
           ),
           header: () => <HeaderComponents title="Sohbet" />,
         }}
       />
+
       <Tabs.Screen
         name="contacts"
         options={{
-          title: "Kişiler",
-          tabBarIcon: ({ color }) => (
-            <Feather name="user" size={28} color={color} />
+          title: "",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              size={28}
+              name={focused ? "people-sharp" : "people-outline"}
+              color={color}
+            />
           ),
-          headerShown: false,
+          header: () => <HeaderComponents title="Kişiler" />,
         }}
       />
     </Tabs>
