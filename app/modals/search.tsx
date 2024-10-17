@@ -1,4 +1,4 @@
-import UserList from "@/components/List/search/UserList";
+import UserList from "@/components/List/Search/UserList";
 import LoadingComponent from "@/components/LoadingComponent";
 import { db, usersRef } from "@/firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";

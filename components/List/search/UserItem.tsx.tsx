@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
-const UserListItem = ({ user, onPress }) => {
+const UserItem = ({ user, onPress }) => {
   return (
     <View className="flex-1 bg-zinc-100  items-center mt-4">
       <View className="bg-white w-11/12 rounded-3xl flex-row items-center p-4 gap-4">
@@ -26,4 +26,4 @@ const UserListItem = ({ user, onPress }) => {
   );
 };
 
-export default UserListItem;
+export default UserItem;
