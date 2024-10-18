@@ -2,8 +2,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack } from "expo-router";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
 
-const ChatRoomHeader = ({ router, item }) => {
+const ChatRoomHeader = ({ router }) => {
+  const { user } = useSelector((state) => state.chat);
   return (
     <Stack.Screen
       options={{
@@ -18,12 +20,12 @@ const ChatRoomHeader = ({ router, item }) => {
 
             <Image
               className="w-12 h-12 rounded-full ml-2"
-              source={{ uri: item.profileImg }}
+              source={{ uri: user?.profileImg }}
             />
 
             <View className="ml-2">
               <Text className="text-lg font-semibold text-black">
-                {item.username}
+                {user?.username}
               </Text>
               <Text className="text-sm text-gray-400">Online</Text>
             </View>

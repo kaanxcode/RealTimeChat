@@ -13,8 +13,10 @@ const Chats = () => {
   const { userData, isLoading, errorMessage } = useSelector(
     (state) => state.user
   );
+  const { chatId, user } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
-  const [chats, setChats] = useState([]); // Sohbetleri tutacak state
+  const [chats, setChats] = useState([]);
+  const [natification, setNatification] = useState([]);
 
   // Kullanıcı verisini Redux ile çek
   useEffect(() => {

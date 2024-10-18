@@ -78,7 +78,7 @@ const Search = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: userId,
-          updateAt: Date.now(),
+          updatedAt: Date.now(),
         }),
       });
 
@@ -87,7 +87,7 @@ const Search = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: selectedUser.id,
-          updateAt: Date.now(),
+          updatedAt: Date.now(),
         }),
       });
     } catch (error) {

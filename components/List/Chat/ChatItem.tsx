@@ -1,29 +1,30 @@
+import { setChat } from "@/redux/slices/chatSlice";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { dateFormatter } from "../../../utils/dateFormatter";
 
 const ChatItem = ({ chat, onSelectChat }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user); // Kullanıcının ID'sini alıyoruz
+  const newDate = dateFormatter(chat.updatedAt);
 
-  const newDate = dateFormatter(chat.updateAt);
+  const isMyMessage = chat?.senderId === userData.id;
 
-  const handleopenChatRoom = () => {
-    onSelectChat(chat); // Seçilen sohbeti gönderiyoruz
+  const handleOpenChatRoom = () => {
+    onSelectChat(chat);
     router.push({
       pathname: "/stack/chat-room",
-      params: {
-        chatId: chat.chatId,
-        username: chat.user.username,
-        profileImg: chat.user.profileImg,
-      },
-    }); // Sohbet ID'sini yönlendirme parametreleri ile gönderiyoruz
+    });
+    dispatch(setChat(chat));
   };
 
   return (
     <Pressable
-      onPress={handleopenChatRoom}
+      onPress={handleOpenChatRoom}
       className="bg-zinc-100 items-center mt-4"
     >
       <View className="bg-white w-11/12 rounded-3xl flex-row items-center p-4 gap-4">
@@ -37,9 +38,21 @@ const ChatItem = ({ chat, onSelectChat }) => {
               {chat.user.username}
             </Text>
             <View className="flex-row items-center gap-1">
-              <Ionicons name="checkmark-done" size={14} color="gray" />
-              <Text className="text-zinc-400 font-normal text-sm ">
-                {chat.lastMessage || "Last Message"}
+              {isMyMessage && (
+                <Ionicons name="checkmark-done" size={14} color="gray" />
+              )}
+              <Text
+                style={{
+                  color: isMyMessage ? "gray" : "black",
+                  fontWeight: isMyMessage ? "normal" : "bold",
+                }}
+                className="text-sm "
+              >
+                {chat?.lastMessage
+                  ? chat.lastMessage.length > 30
+                    ? `${chat.lastMessage.substring(0, 30)}...`
+                    : chat.lastMessage
+                  : "Bir konuşma başlat!"}
               </Text>
             </View>
           </View>
@@ -48,9 +61,9 @@ const ChatItem = ({ chat, onSelectChat }) => {
             <Text className="text-zinc-400 font-normal text-sm ">
               {newDate}
             </Text>
-            <View className="bg-indigo-500 rounded-full py-1 px-3 ">
+            {/* <View className="bg-indigo-500 rounded-full py-1 px-3 ">
               <Text className="text-white font-bold ">2</Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </View>
