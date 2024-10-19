@@ -44,7 +44,6 @@ export const addChats = createAsyncThunk(
         messages: [],
       });
 
-      // Alıcı ve gönderici için sohbet bilgileri güncelleniyor
       await updateDoc(doc(userChatsRef, selectedUser.id), {
         chats: arrayUnion({
           chatId: newChatRef.id,

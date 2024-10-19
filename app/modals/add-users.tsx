@@ -17,11 +17,11 @@ const AddUsers = () => {
     }
   }, [dispatch]);
 
-  const handleSendMessage = (selectedUser) => {
+  const handleCreatingChat = async (selectedUser) => {
     try {
-      dispatch(addChats(selectedUser)).unwrap();
+      await dispatch(addChats({ selectedUser })).unwrap();
     } catch (error) {
-      console.log("Error sending message:", error);
+      console.log("Error creating chat:", error);
     }
   };
 
@@ -43,7 +43,7 @@ const AddUsers = () => {
 
   return (
     <View className="flex-1 bg-zinc-100">
-      <UserList users={users} onPress={handleSendMessage} />
+      <UserList users={users} onPress={handleCreatingChat} />
     </View>
   );
 };
