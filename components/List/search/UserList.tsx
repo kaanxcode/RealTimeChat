@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, View } from "react-native";
-import UserItem from "./UserItem.tsx";
+import UserItem from "./UserItem";
 
 const UserList = ({ users, onPress }) => {
   return (

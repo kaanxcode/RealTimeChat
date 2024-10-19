@@ -22,4 +22,7 @@ export const db = getFirestore(app);
 
 export const storage = getStorage(app);
 
+// Firestore collections references
 export const usersRef = collection(db, "users");
+export const chatRef = collection(db, "chats");
+export const userChatsRef = collection(db, "userChats");

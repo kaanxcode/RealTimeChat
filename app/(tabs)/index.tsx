@@ -1,68 +1,42 @@
 import ChatList from "@/components/List/Chat/ChatList";
 import LoadingComponent from "@/components/LoadingComponent";
 import PlusButtonComponent from "@/components/PlusButtonComponent";
-import { db } from "@/firebaseConfig";
-import { setChat } from "@/redux/slices/chatSlice"; // Chat actions import edin
+import useFetchChats from "@/hooks/useFetchChats";
+
+import { setActiveChat, setChats } from "@/redux/slices/chatSlice";
 import { fetchUserData } from "@/redux/slices/userSlice";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const Chats = () => {
-  const { userData, isLoading, errorMessage } = useSelector(
+  const dispatch = useDispatch();
+  const { userData, isLoading: userLoading } = useSelector(
     (state) => state.user
   );
-  const { chatId, user } = useSelector((state) => state.chat);
-  const dispatch = useDispatch();
-  const [chats, setChats] = useState([]);
-  const [natification, setNatification] = useState([]);
+  const { chats, isLoading: chatsLoading } = useSelector((state) => state.chat);
 
-  // Kullanıcı verisini Redux ile çek
   useEffect(() => {
-    dispatch(fetchUserData());
+    try {
+      dispatch(fetchUserData()).unwrap();
+    } catch (error) {
+      console.log("İndex.tsx in fetchuserdata", error);
+    }
   }, [dispatch]);
 
-  // Firestore'dan kullanıcının sohbetlerini dinle
-  useEffect(() => {
-    if (userData?.id) {
-      const unsub = onSnapshot(
-        doc(db, "userChats", userData.id),
-        async (docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const chatData = docSnapshot.data().chats || [];
+  useFetchChats(userData?.id, (sortedChats) => {
+    dispatch(setChats(sortedChats));
+  });
 
-            // Sohbetlerdeki her kişinin bilgilerini çek
-            const chatsWithUserDetails = await Promise.all(
-              chatData.map(async (chat) => {
-                const userDoc = await getDoc(doc(db, "users", chat.receiverId));
-                if (userDoc.exists()) {
-                  const user = userDoc.data();
-                  return { ...chat, user }; // Her sohbetin kullanıcı bilgilerini ekle
-                }
-                return chat;
-              })
-            );
-
-            // Sohbetleri son güncelleme tarihine göre sıralıyoruz
-            const sortedChats = chatsWithUserDetails.sort(
-              (a, b) => b.updatedAt - a.updatedAt
-            );
-            setChats(sortedChats);
-          }
-        }
-      );
-
-      return () => unsub(); // Dinleyiciyi bileşen kapatıldığında temizle
-    }
-  }, [userData]);
-
-  // Kullanıcı bir sohbete tıkladığında çağrılan fonksiyon
   const handleSelectChat = (chat) => {
-    dispatch(setChat({ chatId: chat.id, user: chat.user })); // Redux'ta sohbeti güncelle
+    try {
+      dispatch(setActiveChat({ chatId: chat.id, user: chat.user })).unwrap();
+    } catch (error) {
+      console.log("index.tsx in setactivechat", error);
+    }
   };
 
-  if (isLoading) {
+  if (userLoading || chatsLoading) {
     return (
       <View className="flex-1 justify-center items-center">
         <LoadingComponent size={60} />
