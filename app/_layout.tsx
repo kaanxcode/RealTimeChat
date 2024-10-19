@@ -48,7 +48,7 @@ export default function RootLayout() {
             options={{ headerShown: false, presentation: "modal" }}
           />
           <Stack.Screen
-            name="modals/search"
+            name="modals/add-users"
             options={{
               presentation: "modal",
               animation: "slide_from_bottom",

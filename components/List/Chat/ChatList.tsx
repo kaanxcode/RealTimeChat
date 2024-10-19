@@ -7,12 +7,9 @@ const ChatList = ({ chats, onSelectChat }) => {
     <View className="flex-1">
       <FlatList
         data={chats}
-        keyExtractor={(item) => item.chatId} // chatId'yi key olarak kullanıyoruz
+        keyExtractor={(item) => item.chatId}
         renderItem={({ item }) => (
-          <ChatItem
-            chat={item}
-            onSelectChat={onSelectChat} // onSelectChat'i buradan geçiriyoruz
-          />
+          <ChatItem chat={item} onSelectChat={onSelectChat} />
         )}
       />
     </View>

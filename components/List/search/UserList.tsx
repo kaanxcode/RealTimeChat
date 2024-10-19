@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, View } from "react-native";
-import UserItem from "./UserItem.tsx";
+import UserItem from "./UserItem";
 
 const UserList = ({ users, onPress }) => {
   return (
@@ -8,12 +8,8 @@ const UserList = ({ users, onPress }) => {
       <FlatList
         data={users}
         keyExtractor={(item) => item.id}
-        // Correctly pass the function to onPress
         renderItem={({ item }) => (
-          <UserItem
-            user={item}
-            onPress={() => onPress(item)} // Pass function that will be executed on press
-          />
+          <UserItem user={item} onPress={() => onPress(item)} />
         )}
       />
     </View>

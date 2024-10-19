@@ -5,7 +5,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 
 const ChatRoomHeader = ({ router }) => {
-  const { user } = useSelector((state) => state.chat);
+  const { activeChatUser } = useSelector((state) => state.chat);
   return (
     <Stack.Screen
       options={{
@@ -20,12 +20,12 @@ const ChatRoomHeader = ({ router }) => {
 
             <Image
               className="w-12 h-12 rounded-full ml-2"
-              source={{ uri: user?.profileImg }}
+              source={{ uri: activeChatUser?.profileImg }}
             />
 
             <View className="ml-2">
               <Text className="text-lg font-semibold text-black">
-                {user?.username}
+                {activeChatUser?.username}
               </Text>
               <Text className="text-sm text-gray-400">Online</Text>
             </View>

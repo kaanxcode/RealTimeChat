@@ -1,4 +1,4 @@
-import { setChat } from "@/redux/slices/chatSlice";
+import { setActiveChat } from "@/redux/slices/chatSlice";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -9,17 +9,18 @@ import { dateFormatter } from "../../../utils/dateFormatter";
 const ChatItem = ({ chat, onSelectChat }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.user); // Kullanıcının ID'sini alıyoruz
-  const newDate = dateFormatter(chat.updatedAt);
 
-  const isMyMessage = chat?.senderId === userData.id;
+  const { userData } = useSelector((state) => state.user);
+
+  const newDate = dateFormatter(chat?.updatedAt);
+  const isMyMessage = chat?.senderId === userData?.id;
 
   const handleOpenChatRoom = () => {
     onSelectChat(chat);
     router.push({
       pathname: "/stack/chat-room",
     });
-    dispatch(setChat(chat));
+    dispatch(setActiveChat(chat));
   };
 
   return (
@@ -30,12 +31,12 @@ const ChatItem = ({ chat, onSelectChat }) => {
       <View className="bg-white w-11/12 rounded-3xl flex-row items-center p-4 gap-4">
         <Image
           className="w-16 h-16 rounded-full"
-          source={{ uri: chat.user.profileImg }}
+          source={{ uri: chat?.user?.profileImg }}
         />
         <View className="flex-1 flex-row justify-between items-center ">
           <View className="gap-1">
             <Text className="text-zinc-900 font-bold text-lg">
-              {chat.user.username}
+              {chat?.user?.username}
             </Text>
             <View className="flex-row items-center gap-1">
               {isMyMessage && (

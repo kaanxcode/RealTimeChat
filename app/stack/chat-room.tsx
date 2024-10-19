@@ -1,32 +1,27 @@
 import ChatRoomHeader from "@/components/ChatRoomHeader";
 import MessageList from "@/components/List/Message/MessageList";
-import { db } from "@/firebaseConfig";
+import { chatRef } from "@/firebaseConfig";
+import { sendMessage } from "@/redux/slices/chatSlice";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  arrayUnion,
-  doc,
-  getDoc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
+import { useRouter } from "expo-router";
+import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import { Keyboard, TextInput, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
 
 const ChatRoom = () => {
-  const item = useLocalSearchParams();
-  const { chatId, user } = useSelector((state) => state.chat);
-  const { userData } = useSelector((state) => state.user);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { activeChatId, activeChatUser } = useSelector((state) => state.chat);
+  const { userData } = useSelector((state) => state.user);
   const [text, setText] = useState("");
   const [chat, setChat] = useState();
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+    const unSub = onSnapshot(doc(chatRef, activeChatId), (res) => {
       setChat(res.data());
     });
 
@@ -39,11 +34,7 @@ const ChatRoom = () => {
       unSub();
       KeyBoardDidShowListener.remove();
     };
-  }, [chatId]);
-
-  useEffect(() => {
-    updateScrollView();
-  }, [chat]);
+  }, [activeChatId]);
 
   const updateScrollView = () => {
     setTimeout(() => {
@@ -51,56 +42,20 @@ const ChatRoom = () => {
     }, 100);
   };
 
-  const handleSend = async () => {
-    if (text === "") return;
+  useEffect(() => {
+    updateScrollView();
+  }, [chat]);
 
-    //let imgUrl = null;
-
+  const handleSend = () => {
     try {
-      //   if (img.file) {
-      //     imgUrl = await upload(img.file);
-      //   }
-      const userId = await AsyncStorage.getItem("userId");
-      await updateDoc(doc(db, "chats", chatId), {
-        messages: arrayUnion({
-          senderId: userId,
-          text,
-          createdAt: new Date(),
-          //   ...(imgUrl && { img: imgUrl }),
-        }),
-      });
+      if (!text) return console.log("Text is empty");
+      if (!activeChatId) return console.log("Chat not found");
+      if (!activeChatUser) return console.log("User not found");
 
-      const userIDs = [userId, user.id];
-
-      userIDs.forEach(async (id) => {
-        const userChatsRef = doc(db, "userChats", id);
-        const userChatsSnapshot = await getDoc(userChatsRef);
-
-        if (userChatsSnapshot.exists()) {
-          const userChatsData = userChatsSnapshot.data();
-
-          const chatIndex = userChatsData.chats.findIndex(
-            (c) => c.chatId === chatId
-          );
-
-          userChatsData.chats[chatIndex].lastMessage = text;
-          userChatsData.chats[chatIndex].senderId = userId;
-          userChatsData.chats[chatIndex].isSeen = id === userId ? true : false;
-          userChatsData.chats[chatIndex].updatedAt = Date.now();
-
-          await updateDoc(userChatsRef, {
-            chats: userChatsData.chats,
-          });
-        }
-      });
+      dispatch(sendMessage({ text, activeChatId, activeChatUser }));
     } catch (error) {
-      console.log(error);
+      console.log("ChatRoom.tsx in sendmessage", error);
     } finally {
-      //   setImg({
-      //     file: null,
-      //     url: "",
-      //   });r
-
       setText("");
     }
   };
