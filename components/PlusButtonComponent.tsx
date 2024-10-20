@@ -3,13 +3,13 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 
-const PlusButtonComponent = () => {
+const PlusButtonComponent = ({ route }) => {
   const router = useRouter();
   return (
     <View className="absolute bottom-5 right-5 wbg-white rounded-full shadow-md">
       <TouchableOpacity
         className="bg-indigo-500 py-3 px-4 rounded-full"
-        onPress={() => router.push("/modals/add-users")}
+        onPress={() => router.push(`/modals/${route}`)}
       >
         <FontAwesome5 name="plus" size={32} color="white" />
       </TouchableOpacity>

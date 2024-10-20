@@ -55,6 +55,14 @@ export default function RootLayout() {
               header: () => <StackHeaderComponent title="Kullanıcılar" />,
             }}
           />
+          <Stack.Screen
+            name="modals/create-group"
+            options={{
+              presentation: "modal",
+              animation: "slide_from_bottom",
+              header: () => <StackHeaderComponent title="Grup Oluştur" />,
+            }}
+          />
         </Stack>
         <MainLayout />
         <Toast />

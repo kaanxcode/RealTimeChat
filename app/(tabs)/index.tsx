@@ -1,11 +1,8 @@
 import ChatList from "@/components/List/Chat/ChatList";
 import LoadingComponent from "@/components/LoadingComponent";
 import PlusButtonComponent from "@/components/PlusButtonComponent";
-import useFetchChats from "@/hooks/useFetchChats";
 
-import { setActiveChat, setChats } from "@/redux/slices/chatSlice";
-import { fetchUserData } from "@/redux/slices/userSlice";
-import { useEffect } from "react";
+import { setActiveChat } from "@/redux/slices/chatSlice";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,17 +13,17 @@ const Chats = () => {
   );
   const { chats, isLoading: chatsLoading } = useSelector((state) => state.chat);
 
-  useEffect(() => {
-    try {
-      dispatch(fetchUserData()).unwrap();
-    } catch (error) {
-      console.log("İndex.tsx in fetchuserdata", error);
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   try {
+  //     dispatch(fetchUserData()).unwrap();
+  //   } catch (error) {
+  //     console.log("İndex.tsx in fetchuserdata", error);
+  //   }
+  // }, [dispatch]);
 
-  useFetchChats(userData?.id, (sortedChats) => {
-    dispatch(setChats(sortedChats));
-  });
+  // useFetchChats(userData?.id, (sortedChats) => {
+  //   dispatch(setChats(sortedChats));
+  // });
 
   const handleSelectChat = (chat) => {
     try {
@@ -47,7 +44,7 @@ const Chats = () => {
   return (
     <View className="flex-1 bg-zinc-100">
       <ChatList chats={chats} onSelectChat={handleSelectChat} />
-      <PlusButtonComponent />
+      <PlusButtonComponent route="add-users" />
     </View>
   );
 };

@@ -21,7 +21,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="contacts"
+        name="groups"
         options={{
           title: "",
           tabBarIcon: ({ color, focused }) => (
@@ -31,7 +31,7 @@ export default function TabLayout() {
               color={color}
             />
           ),
-          header: () => <HeaderComponents title="Kişiler" />,
+          header: () => <HeaderComponents title="Gruplarım" />,
         }}
       />
     </Tabs>
