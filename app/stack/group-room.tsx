@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 const GroupRoom = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { activeGroupChatId, participants } = useSelector(
+  const { activeGroupChatId, activeGroupChatParticipants } = useSelector(
     (state) => state.groupChat
   );
   const { userData } = useSelector((state) => state.user);
@@ -33,7 +33,6 @@ const GroupRoom = () => {
             const username = userDoc.data().username;
             return {
               ...message,
-
               username,
             };
           } else {
@@ -70,7 +69,15 @@ const GroupRoom = () => {
     try {
       if (!text) return console.log("Text is empty");
       if (!activeGroupChatId) return console.log("Chat not found");
-      dispatch(sendMessageGroup({ text, activeGroupChatId, participants }));
+      if (!activeGroupChatParticipants)
+        return console.log("Participants not found");
+      dispatch(
+        sendMessageGroup({
+          text,
+          activeGroupChatId,
+          participants: activeGroupChatParticipants,
+        })
+      );
     } catch (error) {
       console.log("Group Room.tsx in sendMessageGroup", error);
     } finally {
@@ -88,7 +95,7 @@ const GroupRoom = () => {
         <GroupMessageList
           scrollViewRef={scrollViewRef}
           chat={chat}
-          currentUser={userData.id}
+          currentUser={userData?.id}
         />
       </View>
 

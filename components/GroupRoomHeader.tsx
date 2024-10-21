@@ -35,7 +35,7 @@ const GroupRoomHeader = ({ router }) => {
         ),
         headerRight: () => (
           <View className="flex-row items-center gap-2">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push("/modals/group-info")}>
               <Feather name="info" size={24} color="black" />
             </TouchableOpacity>
           </View>

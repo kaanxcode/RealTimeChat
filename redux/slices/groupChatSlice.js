@@ -28,13 +28,17 @@ export const sendMessageGroup = createAsyncThunk(
       for (const id of participants) {
         const groupChatsRef = doc(db, "groupChats", id);
         const groupChatsSnapshot = await getDoc(groupChatsRef);
+        console.log("groupChatsSnapshot", groupChatsSnapshot);
 
         if (groupChatsSnapshot.exists()) {
           const groupChatsData = groupChatsSnapshot.data();
+          console.log("groupChatsData", groupChatsData);
 
           const chatIndex = groupChatsData.chats.findIndex(
             (c) => c.chatId === activeGroupChatId
           );
+          console.log("chatIndex", chatIndex);
+          console.log("groupChatsData.chats", groupChatsData.chats);
 
           groupChatsData.chats[chatIndex].lastMessage = text;
           groupChatsData.chats[chatIndex].senderId = userId;
@@ -121,6 +125,7 @@ const groupChatSlice = createSlice({
     activeGroupChatId: null,
     activeGroupChatImage: null,
     activeGroupChatName: null,
+    activeGroupChatParticipants: [],
     groupChats: [],
     isLoading: false,
     errorMessage: null,
@@ -133,6 +138,13 @@ const groupChatSlice = createSlice({
       state.activeGroupChatId = action.payload.chatId;
       state.activeGroupChatImage = action.payload.groupImage;
       state.activeGroupChatName = action.payload.groupName;
+      state.activeGroupChatParticipants = action.payload.participants;
+    },
+    setActiveGroupChatName: (state, action) => {
+      state.activeGroupChatName = action.payload;
+    },
+    setActiveGroupChatImage: (state, action) => {
+      state.activeGroupChatImage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -175,6 +187,11 @@ const groupChatSlice = createSlice({
   },
 });
 
-export const { setGroupChats, setActiveGroupChat } = groupChatSlice.actions;
+export const {
+  setGroupChats,
+  setActiveGroupChat,
+  setActiveGroupChatName,
+  setActiveGroupChatImage,
+} = groupChatSlice.actions;
 
 export default groupChatSlice.reducer;

@@ -63,6 +63,14 @@ export default function RootLayout() {
               header: () => <StackHeaderComponent title="Grup Oluştur" />,
             }}
           />
+          <Stack.Screen
+            name="modals/group-info"
+            options={{
+              presentation: "modal",
+              animation: "slide_from_bottom",
+              header: () => <StackHeaderComponent title="Grup Bilgileri" />,
+            }}
+          />
         </Stack>
         <MainLayout />
         <Toast />
