@@ -1,27 +1,52 @@
 import GroupUserList from "@/components/List/Group/GroupSearch/GroupUserList";
 import LoadingComponent from "@/components/LoadingComponent";
+import useImagePicker from "@/hooks/useImagePicker";
 import { fetchUsers } from "@/redux/slices/addUsersSlice";
+import { addGroupChat, uploadGroupImage } from "@/redux/slices/groupChatSlice";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 
-const AddUsers = () => {
+const CreateGroup = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { users, isLoading } = useSelector((state) => state.addUsers);
+  const { users, isLoading: addUsersLoading } = useSelector(
+    (state) => state.addUsers
+  );
+  const { userData } = useSelector((state) => state.user);
+  const { isLoading } = useSelector((state) => state.groupChat);
 
-  // Seçilen kullanıcıları takip eden state
+  const { pickImage, imageUri, resetImage } = useImagePicker();
+  const [groupName, setGroupName] = useState("");
+
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   useEffect(() => {
     try {
       dispatch(fetchUsers()).unwrap();
     } catch (error) {
-      console.log("Error fetching users:", error);
+      console.log("create-group error fetching users:", error);
     }
   }, [dispatch]);
 
+  const handleSelectImage = async () => {
+    try {
+      await pickImage();
+    } catch (error) {
+      console.log("Create-group error selecting image:", error);
+    }
+  };
+
   const handleUserSelect = (user) => {
-    // Seçilen kullanıcıyı listeye ekleme veya çıkarma
     if (selectedUsers.includes(user)) {
       setSelectedUsers(selectedUsers.filter((u) => u.id !== user.id));
     } else {
@@ -32,15 +57,42 @@ const AddUsers = () => {
   const handleCreatingGroupChat = async () => {
     if (selectedUsers.length >= 2) {
       try {
-        console.log("Group created with users:", selectedUsers);
-        // Grup oluşturma işlemi burada olacak
+        if (!imageUri) {
+          Toast.show({
+            type: "error",
+            text1: "Hata",
+            text2: "Bir resim seçmelisiniz.",
+          });
+          return;
+        }
+        const downloadURL = await dispatch(
+          uploadGroupImage({ imageUri, userId: userData.id })
+        ).unwrap();
+        if (!groupName) {
+          Toast.show({
+            type: "error",
+            text1: "Hata",
+            text2: "Grup ismi girmelisiniz.",
+          });
+          return;
+        }
+        await dispatch(
+          addGroupChat({ selectedUsers, groupImage: downloadURL, groupName })
+        ).unwrap();
       } catch (error) {
         console.log("Error creating group chat:", error);
+      } finally {
+        if (imageUri && groupName) {
+          setSelectedUsers([]);
+          setGroupName("");
+          resetImage();
+          router.back();
+        }
       }
     }
   };
 
-  if (isLoading) {
+  if (isLoading || addUsersLoading) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center bg-zinc-100">
         <LoadingComponent size={60} />
@@ -50,14 +102,35 @@ const AddUsers = () => {
 
   if (users.length === 0) {
     return (
-      <SafeAreaView className="flex-1 pt-20 bg-zinc-100">
+      <SafeAreaView className="flex-1 pt-20 bg-zinc-100 justify-center items-center ">
         <Text className="text-3xl font-bold">No users found</Text>
       </SafeAreaView>
     );
   }
 
   return (
-    <View className="flex-1 bg-zinc-100">
+    <View className="flex-1 bg-zinc-100 pt-2">
+      <View className="flex-row justify-start items-center gap-2 mx-2">
+        <TouchableOpacity onPress={handleSelectImage}>
+          <Image
+            source={
+              imageUri
+                ? { uri: imageUri }
+                : require("../../assets/images/imageplus.jpg")
+            }
+            className="w-12 h-12 rounded-full "
+          />
+        </TouchableOpacity>
+        <View className="flex-1 h-12 flex-row gap-4 px-4 bg-neutral-200 items-center rounded-2xl">
+          <TextInput
+            placeholder="Grup ismi giriniz"
+            className="flex-1 text-md font-semibold text-naturel-700"
+            onChangeText={setGroupName}
+            value={groupName}
+          />
+        </View>
+      </View>
+
       <GroupUserList
         users={users}
         selectedUsers={selectedUsers}
@@ -75,4 +148,4 @@ const AddUsers = () => {
   );
 };
 
-export default AddUsers;
+export default CreateGroup;
