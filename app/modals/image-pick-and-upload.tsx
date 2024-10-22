@@ -1,6 +1,6 @@
 import LoadingComponent from "@/components/LoadingComponent";
+import useImagePicker from "@/hooks/useImagePicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -15,49 +15,14 @@ const ImagePickerAndUpload = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { userData, isLoading } = useSelector((state) => state.user);
-
-  const pickImage = async () => {
-    try {
-      const permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (permissionResult.granted === false) {
-        alert("Galeriye erişim izni gerekli!");
-        return;
-      }
-
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        return result.assets[0].uri;
-      } else {
-        Toast.show({
-          type: "info",
-          text1: "Bilgi",
-          text2: "Herhangi bir resim seçilmedi.",
-        });
-        return;
-      }
-    } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Hata",
-        text2: error.toString(),
-      });
-    }
-  };
+  const { pickImage } = useImagePicker();
 
   const handleImageUpload = async () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
       const field = "profileImg";
 
-      const imageUri = await pickImage();
+      const imageUri = await pickImage({ toast: true });
       if (!imageUri) return;
 
       const profileImg = await dispatch(

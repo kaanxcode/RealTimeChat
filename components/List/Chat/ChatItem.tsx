@@ -12,7 +12,7 @@ const ChatItem = ({ chat, onSelectChat }) => {
 
   const { userData } = useSelector((state) => state.user);
 
-  const newDate = dateFormatter(chat?.updatedAt);
+  const newDate = dateFormatter(chat?.updatedAt / 1000);
   const isMyMessage = chat?.senderId === userData?.id;
 
   const handleOpenChatRoom = () => {

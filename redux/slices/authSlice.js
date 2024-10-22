@@ -29,6 +29,9 @@ export const register = createAsyncThunk(
       await setDoc(doc(db, "userChats", response.user.uid), {
         chats: [],
       });
+      await setDoc(doc(db, "groupChats", response.user.uid), {
+        chats: [],
+      });
 
       return null;
     } catch (error) {

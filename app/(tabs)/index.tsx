@@ -20,7 +20,7 @@ const Chats = () => {
     try {
       dispatch(fetchUserData()).unwrap();
     } catch (error) {
-      console.log("İndex.tsx in fetchuserdata", error);
+      console.log("İndex.tsx in fetchUserData", error);
     }
   }, [dispatch]);
 
@@ -32,7 +32,7 @@ const Chats = () => {
     try {
       dispatch(setActiveChat({ chatId: chat.id, user: chat.user })).unwrap();
     } catch (error) {
-      console.log("index.tsx in setactivechat", error);
+      console.log("index.tsx in setActiveChat", error);
     }
   };
 
@@ -47,7 +47,7 @@ const Chats = () => {
   return (
     <View className="flex-1 bg-zinc-100">
       <ChatList chats={chats} onSelectChat={handleSelectChat} />
-      <PlusButtonComponent />
+      <PlusButtonComponent route="add-users" />
     </View>
   );
 };
