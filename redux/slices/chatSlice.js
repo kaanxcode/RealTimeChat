@@ -6,7 +6,10 @@ import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 // Mesaj gönderme aksiyonu
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
-  async ({ text, activeChatId, activeChatUser }, { rejectWithValue }) => {
+  async (
+    { text, activeChatId, activeChatUser, fileUrl },
+    { rejectWithValue }
+  ) => {
     try {
       const userId = await AsyncStorage.getItem("userId");
 
@@ -15,6 +18,7 @@ export const sendMessage = createAsyncThunk(
           senderId: userId,
           text,
           createdAt: new Date(),
+          ...(fileUrl && { fileUrl: fileUrl }),
         }),
       });
 
@@ -31,6 +35,7 @@ export const sendMessage = createAsyncThunk(
             (c) => c.chatId === activeChatId
           );
 
+          userChatsData.chats[chatIndex].attachment = fileUrl ? fileUrl : "";
           userChatsData.chats[chatIndex].lastMessage = text;
           userChatsData.chats[chatIndex].senderId = userId;
           userChatsData.chats[chatIndex].isSeen = id === userId ? true : false;

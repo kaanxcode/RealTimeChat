@@ -1,6 +1,9 @@
 import ChatRoomHeader from "@/components/ChatRoomHeader";
 import MessageList from "@/components/List/Message/MessageList";
 import { chatRef } from "@/firebaseConfig";
+import useDocumentPicker from "@/hooks/useDocumentPicker";
+import useImagePicker from "@/hooks/useImagePicker";
+import useFileUpload from "@/hooks/useUploadFile";
 import { sendMessage } from "@/redux/slices/chatSlice";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
@@ -19,6 +22,11 @@ const ChatRoom = () => {
   const [text, setText] = useState("");
   const [chat, setChat] = useState();
   const scrollViewRef = useRef(null);
+  const [image, setImage] = useState({ uri: "", type: "" });
+  const [document, setDocument] = useState({ uri: "", type: "" });
+  const { pickImage } = useImagePicker();
+  const { pickDocument } = useDocumentPicker();
+  const { uploadFile } = useFileUpload();
 
   useEffect(() => {
     const unSub = onSnapshot(doc(chatRef, activeChatId), (res) => {
@@ -46,17 +54,58 @@ const ChatRoom = () => {
     updateScrollView();
   }, [chat]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     try {
-      if (!text) return console.log("Text is empty");
-      if (!activeChatId) return console.log("Chat not found");
-      if (!activeChatUser) return console.log("User not found");
+      if (!text && !image.uri && !document.uri) {
+        console.log("Mesaj boş");
+        return;
+      }
 
-      dispatch(sendMessage({ text, activeChatId, activeChatUser }));
+      let fileDownloadURL = "";
+      setText("");
+      setDocument({ uri: "", type: "" });
+      setImage({ uri: "", type: "" });
+
+      if (document.uri) {
+        fileDownloadURL = await uploadFile(document.uri, document.type);
+        console.log("Document uploaded:", document, "URL:", fileDownloadURL);
+      }
+
+      if (image.uri) {
+        fileDownloadURL = await uploadFile(image.uri, image.type);
+        console.log("Image uploaded:", image, "URL:", fileDownloadURL);
+      }
+
+      dispatch(
+        sendMessage({
+          text,
+          activeChatId,
+          activeChatUser,
+          fileUrl: fileDownloadURL,
+        })
+      );
     } catch (error) {
       console.log("ChatRoom.tsx in sendmessage", error);
     } finally {
       setText("");
+    }
+  };
+
+  const handlePickerImage = async () => {
+    const result = await pickImage({ toast: false });
+    if (result) {
+      setImage({ uri: result.uri, type: result.type });
+    } else {
+      console.log("Resim seçimi yapılmadı.");
+    }
+  };
+
+  const handlePickerDocument = async () => {
+    const result = await pickDocument({ toast: false });
+    if (result) {
+      setDocument({ uri: result.uri, type: result.type });
+    } else {
+      console.log("Document yapılmadı.");
     }
   };
 
@@ -70,23 +119,42 @@ const ChatRoom = () => {
         <MessageList
           scrollViewRef={scrollViewRef}
           chat={chat}
-          currentUser={userData.id}
+          currentUser={userData?.id}
         />
       </View>
 
-      <View className="bg-white pb-3 pt-3 rounded-t-2xl ">
-        <View className="flex-row items-center bg-zinc-100 rounded-full p-2 m-2 ">
+      <View className="bg-white pb-3 pt-3 rounded-t-2xl">
+        <View className="flex-row items-center bg-zinc-100 rounded-full p-2 m-2">
           <TextInput
             value={text}
             onChangeText={setText}
             className="flex-1 bg-zinc-100 px-2 py-1 rounded-full"
-            placeholder="Type a message"
+            placeholder="Mesaj yazın"
           />
-
-          <TouchableOpacity className="ml-2 bg-zinc-100 p-2 rounded-full">
-            <Entypo name="attachment" size={18} color="gray" />
+          <TouchableOpacity
+            disabled={document.uri ? true : false}
+            onLongPress={() => setImage({ uri: "", type: "" })}
+            onPress={handlePickerImage}
+            className="ml-2 bg-zinc-100 p-2 rounded-full"
+          >
+            <Entypo
+              name="image"
+              size={18}
+              color={image.uri ? "indigo" : "gray"}
+            />
           </TouchableOpacity>
-
+          <TouchableOpacity
+            disabled={image.uri ? true : false}
+            onLongPress={() => setDocument({ uri: "", type: "" })}
+            onPress={handlePickerDocument}
+            className="ml-2 bg-zinc-100 p-2 rounded-full"
+          >
+            <Entypo
+              name="attachment"
+              size={18}
+              color={document.uri ? "indigo" : "gray"}
+            />
+          </TouchableOpacity>
           <TouchableOpacity
             className="ml-2 bg-zinc-100 p-2 rounded-full"
             onPress={handleSend}
