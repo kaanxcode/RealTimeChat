@@ -11,7 +11,7 @@ const GroupChatItem = ({ groupChat, onSelectGroupChat }) => {
 
   const { userData } = useSelector((state) => state.user);
 
-  const newDate = dateFormatter(groupChat?.updatedAt);
+  const newDate = dateFormatter(groupChat?.updatedAt / 1000);
   const isMyMessage = groupChat?.senderId === userData?.id;
 
   const handleOpenGroupChatRoom = () => {
@@ -19,8 +19,49 @@ const GroupChatItem = ({ groupChat, onSelectGroupChat }) => {
     router.push({
       pathname: "/stack/group-room",
     });
-    //dispatch(setActiveGroupChat(groupChat));
-    console.log("groupChat", groupChat);
+  };
+
+  const renderMessageContent = () => {
+    if (groupChat?.lastMessage) {
+      return (
+        <>
+          <Text
+            style={{
+              color: isMyMessage ? "gary" : "black",
+              fontWeight: isMyMessage ? "normal" : "bold",
+            }}
+            className="text-sm"
+          >
+            {groupChat.lastMessage}
+          </Text>
+        </>
+      );
+    } else if (groupChat?.attachment) {
+      const attachmentType = groupChat.attachment.includes("image")
+        ? "Fotoğraf"
+        : groupChat.attachment.includes("document")
+        ? "Dosya"
+        : null;
+
+      return (
+        <>
+          {attachmentType === "Fotoğraf" && (
+            <View className="flex-row items-center gap-1">
+              <Ionicons name="image" size={14} color="gray" />
+              <Text className="text-sm">{attachmentType}</Text>
+            </View>
+          )}
+          {attachmentType === "Dosya" && (
+            <View className="flex-row items-center gap-1">
+              <Ionicons name="attach" size={14} color="gray" />
+              <Text className="text-sm">{attachmentType}</Text>
+            </View>
+          )}
+        </>
+      );
+    } else {
+      return <Text className="text-sm font-bold">Bir konuşma başlat!</Text>;
+    }
   };
 
   return (
@@ -42,19 +83,7 @@ const GroupChatItem = ({ groupChat, onSelectGroupChat }) => {
               {isMyMessage && (
                 <Ionicons name="checkmark-done" size={14} color="gray" />
               )}
-              <Text
-                style={{
-                  color: isMyMessage ? "gray" : "black",
-                  fontWeight: isMyMessage ? "normal" : "bold",
-                }}
-                className="text-sm "
-              >
-                {groupChat?.lastMessage
-                  ? groupChat.lastMessage.length > 30
-                    ? `${groupChat.lastMessage.substring(0, 30)}...`
-                    : groupChat.lastMessage
-                  : "Bir konuşma başlat!"}
-              </Text>
+              {renderMessageContent()}
             </View>
           </View>
 
@@ -62,9 +91,6 @@ const GroupChatItem = ({ groupChat, onSelectGroupChat }) => {
             <Text className="text-zinc-400 font-normal text-sm ">
               {newDate}
             </Text>
-            {/* <View className="bg-indigo-500 rounded-full py-1 px-3 ">
-              <Text className="text-white font-bold ">2</Text>
-            </View> */}
           </View>
         </View>
       </View>

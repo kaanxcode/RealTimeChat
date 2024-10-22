@@ -13,7 +13,10 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export const sendMessageGroup = createAsyncThunk(
   "groupChat/sendMessageGroup",
-  async ({ text, activeGroupChatId, participants }, { rejectWithValue }) => {
+  async (
+    { text, activeGroupChatId, participants, fileUrl },
+    { rejectWithValue }
+  ) => {
     try {
       const userId = await AsyncStorage.getItem("userId");
 
@@ -22,6 +25,7 @@ export const sendMessageGroup = createAsyncThunk(
           senderId: userId,
           text,
           createdAt: new Date(),
+          ...(fileUrl && { fileUrl: fileUrl }),
         }),
       });
 
@@ -37,9 +41,10 @@ export const sendMessageGroup = createAsyncThunk(
           const chatIndex = groupChatsData.chats.findIndex(
             (c) => c.chatId === activeGroupChatId
           );
-          console.log("chatIndex", chatIndex);
-          console.log("groupChatsData.chats", groupChatsData.chats);
 
+          if (fileUrl) {
+            groupChatsData.chats[chatIndex].attachment = fileUrl;
+          }
           groupChatsData.chats[chatIndex].lastMessage = text;
           groupChatsData.chats[chatIndex].senderId = userId;
           groupChatsData.chats[chatIndex].isSeen = id === userId ? true : false;

@@ -24,6 +24,7 @@ const useFetchGroupChats = (userId, setGroupChats) => {
                         groupImage: chatData.groupInfo.groupImage,
                         groupName: chatData.groupInfo.groupName,
                         lastMessage: chat.lastMessage,
+                        attachment: chat.attachment,
                         senderId: chat.senderId,
                         participants: chatData.participants,
                         updatedAt: chat.updatedAt,

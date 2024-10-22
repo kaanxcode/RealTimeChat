@@ -71,6 +71,14 @@ export default function RootLayout() {
               header: () => <StackHeaderComponent title="Grup Bilgileri" />,
             }}
           />
+          <Stack.Screen
+            name="modals/picker"
+            options={{
+              presentation: "modal",
+              animation: "slide_from_bottom",
+              header: () => <StackHeaderComponent title="Dosya ekle" />,
+            }}
+          />
         </Stack>
         <MainLayout />
         <Toast />

@@ -33,6 +33,12 @@
         {
           "photosPermission": "Uygulama fotoğraflarınızı paylaşabilmeniz için fotoğraflarınıza erişir."
         }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
       ]
     ],
     "experiments": {

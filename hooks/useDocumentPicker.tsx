@@ -1,28 +1,16 @@
-import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import Toast from "react-native-toast-message";
 
-const useImagePicker = () => {
-  const pickImage = async ({ toast }) => {
+const useDocumentPicker = () => {
+  const pickDocument = async ({ toast }) => {
     try {
-      const permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (permissionResult.granted === false) {
-        alert("Galeriye erişim izni gerekli!");
-        return;
-      }
-
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.3,
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "*/*",
+        copyToCacheDirectory: true,
       });
-
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
-
-        return { uri: asset.uri, type: asset.type };
+        return { uri: asset.uri, type: asset.mimeType };
       } else {
         if (!toast) {
           console.log("Resim seçimi iptal edildi.");
@@ -34,6 +22,7 @@ const useImagePicker = () => {
             text2: "Herhangi bir resim seçilmedi.",
           });
         }
+        return null;
       }
     } catch (error) {
       console.log("ImagePicker error:", error);
@@ -46,7 +35,7 @@ const useImagePicker = () => {
     }
   };
 
-  return { pickImage };
+  return { pickDocument };
 };
 
-export default useImagePicker;
+export default useDocumentPicker;
