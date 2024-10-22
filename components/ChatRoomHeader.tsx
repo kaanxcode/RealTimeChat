@@ -1,11 +1,64 @@
+import { deleteChat } from "@/redux/slices/chatSlice";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack } from "expo-router";
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
 
 const ChatRoomHeader = ({ router }) => {
-  const { activeChatUser } = useSelector((state) => state.chat);
+  const dispatch = useDispatch();
+  const { activeChatUser, activeChatId } = useSelector((state) => state.chat);
+
+  const handleDeleteChat = async () => {
+    try {
+      Alert.alert(
+        "DİKKAT SOHBET SİLİNİYOR",
+        "Sohbeti silmek istediğinden emin misin? Bu işlem geri alınamaz.",
+        [
+          {
+            text: "İPTAL",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "SOHBETİ SİL",
+            onPress: async () => {
+              try {
+                const success = await dispatch(
+                  deleteChat({
+                    chatId: activeChatId,
+                    activeUser: activeChatUser.id,
+                  })
+                ).unwrap();
+
+                if (success) {
+                  router.back(); // Başarılıysa geri dön
+                } else {
+                  Toast.show({
+                    type: "error",
+                    text1: "Hata",
+                    text2: "Sohbet silinemedi.",
+                  });
+                }
+              } catch (error) {
+                console.log("Error deleting chat:", error);
+                Toast.show({
+                  type: "error",
+                  text1: "Hata",
+                  text2: "Bir hata oluştu.",
+                });
+              }
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.log("Error in Alert:", error);
+    }
+  };
+
   return (
     <Stack.Screen
       options={{
@@ -29,6 +82,13 @@ const ChatRoomHeader = ({ router }) => {
               </Text>
               <Text className="text-sm text-gray-400">Online</Text>
             </View>
+          </View>
+        ),
+        headerRight: () => (
+          <View className="flex-row items-center gap-4">
+            <TouchableOpacity onPress={handleDeleteChat}>
+              <Ionicons name="trash" size={24} color="black" />
+            </TouchableOpacity>
           </View>
         ),
       }}

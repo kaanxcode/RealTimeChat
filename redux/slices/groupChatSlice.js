@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   arrayUnion,
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -74,6 +75,48 @@ export const uploadGroupImage = createAsyncThunk(
 
       const downloadURL = await getDownloadURL(snapshot.ref);
       return downloadURL;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// grup silme
+export const deleteGroupChat = createAsyncThunk(
+  "groupChat/deleteGroupChat",
+  async ({ chatId, participants }, { rejectWithValue }) => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+
+      if (!userId) {
+        throw new Error("User not found");
+      }
+
+      await deleteDoc(doc(db, "chats", chatId));
+
+      await Promise.all(
+        participants.map(async (id) => {
+          const groupChatsRef = doc(db, "groupChats", id);
+          const groupChatsSnapshot = await getDoc(groupChatsRef);
+
+          if (groupChatsSnapshot.exists()) {
+            const groupChatsData = groupChatsSnapshot.data();
+
+            const chatIndex = groupChatsData.chats.findIndex(
+              (c) => c.chatId === chatId
+            );
+
+            if (chatIndex !== -1) {
+              groupChatsData.chats.splice(chatIndex, 1);
+              await updateDoc(groupChatsRef, {
+                chats: groupChatsData.chats,
+              });
+            }
+          }
+        })
+      );
+
+      return { success: true };
     } catch (error) {
       return rejectWithValue(error.message);
     }

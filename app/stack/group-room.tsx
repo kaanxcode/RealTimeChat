@@ -129,6 +129,7 @@ const GroupRoom = () => {
     <View className="flex-1 bg-zinc-100">
       <GroupRoomHeader router={router} />
       <View className="border-b border-zinc-300" />
+
       <View className="flex-1 bg-zinc-100">
         <GroupMessageList
           scrollViewRef={scrollViewRef}
@@ -136,6 +137,7 @@ const GroupRoom = () => {
           currentUser={userData?.id}
         />
       </View>
+
       <View className="bg-white pb-3 pt-3 rounded-t-2xl">
         <View className="flex-row items-center bg-zinc-100 rounded-full p-2 m-2">
           <TextInput
@@ -144,6 +146,7 @@ const GroupRoom = () => {
             className="flex-1 bg-zinc-100 px-2 py-1 rounded-full"
             placeholder="Mesaj yazın"
           />
+
           <TouchableOpacity
             disabled={document.uri ? true : false}
             onLongPress={() => setImage({ uri: "", type: "" })}
@@ -156,6 +159,7 @@ const GroupRoom = () => {
               color={image.uri ? "indigo" : "gray"}
             />
           </TouchableOpacity>
+
           <TouchableOpacity
             disabled={image.uri ? true : false}
             onLongPress={() => setDocument({ uri: "", type: "" })}
@@ -168,6 +172,7 @@ const GroupRoom = () => {
               color={document.uri ? "indigo" : "gray"}
             />
           </TouchableOpacity>
+
           <TouchableOpacity
             className="ml-2 bg-zinc-100 p-2 rounded-full"
             onPress={handleSend}
