@@ -22,7 +22,7 @@ const ImagePickerAndUpload = () => {
       const userId = await AsyncStorage.getItem("userId");
       const field = "profileImg";
 
-      const imageUri = await pickImage();
+      const imageUri = await pickImage({ toast: true });
       if (!imageUri) return;
 
       const profileImg = await dispatch(

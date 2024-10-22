@@ -42,9 +42,7 @@ export const sendMessageGroup = createAsyncThunk(
             (c) => c.chatId === activeGroupChatId
           );
 
-          if (fileUrl) {
-            groupChatsData.chats[chatIndex].attachment = fileUrl;
-          }
+          groupChatsData.chats[chatIndex].attachment = fileUrl ? fileUrl : "";
           groupChatsData.chats[chatIndex].lastMessage = text;
           groupChatsData.chats[chatIndex].senderId = userId;
           groupChatsData.chats[chatIndex].isSeen = id === userId ? true : false;

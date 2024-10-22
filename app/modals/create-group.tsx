@@ -1,8 +1,9 @@
 import GroupUserList from "@/components/List/Group/GroupSearch/GroupUserList";
 import LoadingComponent from "@/components/LoadingComponent";
 import useImagePicker from "@/hooks/useImagePicker";
+import useFileUpload from "@/hooks/useUploadFile";
 import { fetchUsers } from "@/redux/slices/addUsersSlice";
-import { addGroupChat, uploadGroupImage } from "@/redux/slices/groupChatSlice";
+import { addGroupChat } from "@/redux/slices/groupChatSlice";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -25,9 +26,10 @@ const CreateGroup = () => {
   const { userData } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.groupChat);
 
-  const { pickImage, imageUri, resetImage } = useImagePicker();
+  const { pickImage } = useImagePicker();
+  const { uploadFile } = useFileUpload();
   const [groupName, setGroupName] = useState("");
-
+  const [image, setImage] = useState({ uri: "", type: "" });
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   useEffect(() => {
@@ -40,7 +42,8 @@ const CreateGroup = () => {
 
   const handleSelectImage = async () => {
     try {
-      await pickImage();
+      let result = await pickImage({ toast: true });
+      setImage({ uri: result.uri, type: result.type });
     } catch (error) {
       console.log("Create-group error selecting image:", error);
     }
@@ -57,7 +60,7 @@ const CreateGroup = () => {
   const handleCreatingGroupChat = async () => {
     if (selectedUsers.length >= 2) {
       try {
-        if (!imageUri) {
+        if (!image.uri) {
           Toast.show({
             type: "error",
             text1: "Hata",
@@ -65,9 +68,7 @@ const CreateGroup = () => {
           });
           return;
         }
-        const downloadURL = await dispatch(
-          uploadGroupImage({ imageUri, userId: userData.id })
-        ).unwrap();
+        const downloadURL = await uploadFile(image.uri, image.type);
         if (!groupName) {
           Toast.show({
             type: "error",
@@ -82,10 +83,10 @@ const CreateGroup = () => {
       } catch (error) {
         console.log("Error creating group chat:", error);
       } finally {
-        if (imageUri && groupName) {
+        if (image.uri && groupName) {
           setSelectedUsers([]);
           setGroupName("");
-          resetImage();
+          setImage({ uri: "", type: "" });
           router.back();
         }
       }
@@ -114,8 +115,8 @@ const CreateGroup = () => {
         <TouchableOpacity onPress={handleSelectImage}>
           <Image
             source={
-              imageUri
-                ? { uri: imageUri }
+              image.uri
+                ? { uri: image.uri }
                 : require("../../assets/images/imageplus.jpg")
             }
             className="w-12 h-12 rounded-full "
