@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 const AddUsers = () => {
   const dispatch = useDispatch();
   const { users, isLoading } = useSelector((state) => state.addUsers);
+  const { chats, isLoading: chatsLoading } = useSelector((state) => state.chat);
 
   useEffect(() => {
     try {
@@ -32,18 +33,33 @@ const AddUsers = () => {
       </SafeAreaView>
     );
   }
-
   if (users.length === 0) {
     return (
-      <SafeAreaView className="flex-1 pt-20 bg-zinc-100">
-        <Text className="text-3xl font-bold">No users found</Text>
+      <SafeAreaView className="flex-1 justify-center items-center bg-zinc-100">
+        <Text className="text-xl text-red-500 font-medium">
+          Kullanıcı bulunamadı
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
+  // Kullanıcıların ID'leri ile karşılaştırma yap
+  const chatUserIds = new Set(chats.map((chat) => chat.user.id));
+  const filteredUsers = users.filter((user) => !chatUserIds.has(user.id));
+
+  if (filteredUsers.length === 0 && users.length > 0) {
+    return (
+      <SafeAreaView className="flex-1 justify-center items-center bg-zinc-100">
+        <Text className="text-xl text-indigo-500 font-medium">
+          Tüm kullanıcılarla sohbet ediyorsunuz
+        </Text>
       </SafeAreaView>
     );
   }
 
   return (
     <View className="flex-1 bg-zinc-100">
-      <UserList users={users} onPress={handleCreatingChat} />
+      <UserList users={filteredUsers} onPress={handleCreatingChat} />
     </View>
   );
 };
