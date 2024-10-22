@@ -1,7 +1,13 @@
 import { db } from "@/firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 // Mesaj gönderme aksiyonu
 export const sendMessage = createAsyncThunk(
@@ -54,6 +60,50 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+// Chat delete
+export const deleteChat = createAsyncThunk(
+  "chat/deleteChat",
+  async ({ chatId, activeUser }, { rejectWithValue }) => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+
+      if (!userId) {
+        throw new Error("User not found");
+      }
+
+      await deleteDoc(doc(db, "chats", chatId));
+
+      const userIDs = [userId, activeUser];
+
+      await Promise.all(
+        userIDs.map(async (id) => {
+          const userChatsRef = doc(db, "userChats", id);
+          const userChatsSnapshot = await getDoc(userChatsRef);
+
+          if (userChatsSnapshot.exists()) {
+            const userChatsData = userChatsSnapshot.data();
+
+            const chatIndex = userChatsData.chats.findIndex(
+              (c) => c.chatId === chatId
+            );
+
+            if (chatIndex !== -1) {
+              userChatsData.chats.splice(chatIndex, 1);
+              await updateDoc(userChatsRef, {
+                chats: userChatsData.chats,
+              });
+            }
+          }
+        })
+      );
+
+      return { success: true };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const chatSlice = createSlice({
   name: "chat",
   initialState: {
@@ -87,6 +137,19 @@ const chatSlice = createSlice({
         // Ekstra state güncellemeleri yapılabilir
       })
       .addCase(sendMessage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errorMessage = action.payload;
+      });
+    builder
+      .addCase(deleteChat.pending, (state) => {
+        state.isLoading = true;
+        state.errorMessage = null;
+      })
+      .addCase(deleteChat.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.errorMessage = null;
+      })
+      .addCase(deleteChat.rejected, (state, action) => {
         state.isLoading = false;
         state.errorMessage = action.payload;
       });

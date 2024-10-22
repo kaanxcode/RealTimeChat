@@ -1,6 +1,7 @@
 import UserList from "@/components/List/search/UserList";
 import LoadingComponent from "@/components/LoadingComponent";
 import { addChats, fetchUsers } from "@/redux/slices/addUsersSlice";
+import { router } from "expo-router";
 import React, { useEffect } from "react";
 import { SafeAreaView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +22,7 @@ const AddUsers = () => {
   const handleCreatingChat = async (selectedUser) => {
     try {
       await dispatch(addChats({ selectedUser })).unwrap();
+      router.back();
     } catch (error) {
       console.log("Error creating chat:", error);
     }

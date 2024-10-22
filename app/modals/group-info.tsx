@@ -1,3 +1,4 @@
+import DeleteGroup from "@/components/GroupInfo/DeleteGroup";
 import { db, usersRef } from "@/firebaseConfig";
 import useImagePicker from "@/hooks/useImagePicker";
 import useFileUpload from "@/hooks/useUploadFile";
@@ -248,7 +249,7 @@ const GroupInfo = () => {
           )}
         </View>
 
-        <View className="flex-1 w-full">
+        <View className="flex-1 w-full ">
           <View className="flex-row items-center justify-between px-4">
             <Text className="text-2xl font-bold text-indigo-500">
               Katılımcılar
@@ -268,7 +269,7 @@ const GroupInfo = () => {
               return (
                 <View className="flex-row justify-between items-center p-4 bg-zinc-100 my-2 rounded-md">
                   <Text className="text-lg font-semibold">{username}</Text>
-                  {adminId !== item && (
+                  {adminId !== item && adminId === userData?.id && (
                     <TouchableOpacity
                       onPress={() => handleRemoveParticipant(item)}
                     >
@@ -280,6 +281,10 @@ const GroupInfo = () => {
             }}
           />
         </View>
+
+        {adminId === userData?.id && (
+          <DeleteGroup chatId={activeGroupChatId} participants={participants} />
+        )}
 
         <Modal
           animationType="slide"
