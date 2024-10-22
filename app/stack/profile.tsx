@@ -1,4 +1,6 @@
 import LoadingComponent from "@/components/LoadingComponent";
+import useImagePicker from "@/hooks/useImagePicker";
+import useFileUpload from "@/hooks/useUploadFile";
 import { deleteUser } from "@/redux/slices/authSlice";
 import { updateUserData } from "@/redux/slices/userSlice";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -21,9 +23,28 @@ const Profile = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { userData, isLoading } = useSelector((state) => state.user);
+  const { pickImage } = useImagePicker();
+  const { uploadFile } = useFileUpload();
 
   const [showInput, setShowInput] = useState(false);
   const [username, setUsername] = useState("");
+
+  const handleUdateProfileImage = async () => {
+    try {
+      const result = await pickImage({ toast: true });
+
+      const profileImg = await uploadFile(result.uri, result.type);
+
+      dispatch(updateUserData({ profileImg, field: "profileImg" })).unwrap();
+      Toast.show({
+        type: "success",
+        text1: "Başarılı",
+        text2: "Profil resminiz başarıyla güncellendi.",
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   const handleChangeUsername = async () => {
     try {
@@ -84,10 +105,7 @@ const Profile = () => {
           source={{ uri: userData?.profileImg }}
           className="w-28 h-28 rounded-full"
         />
-        <TouchableOpacity
-          onPress={() => router.push("/modals/image-pick-and-upload")}
-          className="mt-4"
-        >
+        <TouchableOpacity onPress={handleUdateProfileImage} className="mt-4">
           <Text className="text-indigo-500 text-lg font-medium">
             Profil resmini değiştir
           </Text>
