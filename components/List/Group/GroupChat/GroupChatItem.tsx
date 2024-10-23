@@ -32,7 +32,9 @@ const GroupChatItem = ({ groupChat, onSelectGroupChat }) => {
             }}
             className="text-sm"
           >
-            {groupChat.lastMessage}
+            {groupChat?.lastMessage.length > 30
+              ? `${groupChat?.lastMessage.substring(0, 30)}...`
+              : groupChat?.lastMessage}
           </Text>
         </>
       );
