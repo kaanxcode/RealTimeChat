@@ -1,3 +1,4 @@
+import AntDesign from "@expo/vector-icons/AntDesign";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
@@ -10,19 +11,30 @@ const GroupUserItem = ({ user, isSelected, onPress }) => {
           source={{ uri: user?.profileImg }}
         />
         <View className="flex-1 flex-row justify-between items-center gap-10">
-          <Text className="text-zinc-900 font-bold text-lg">
-            {user?.username}
-          </Text>
+          <View className="gap-1">
+            <Text className="text-zinc-900 font-bold text-lg">
+              {user?.username.length > 20
+                ? `${user?.username.substring(0, 20)}...`
+                : user?.username}
+            </Text>
+            <Text className="text-zinc-400 font-light text-xs">
+              {user?.email.length > 20
+                ? `${user?.email.substring(0, 20)}...`
+                : user?.email}
+            </Text>
+          </View>
 
           <TouchableOpacity
+            className={`flex-row justify-between items-center p-4 my-2 rounded-md 
+             
+            `}
             onPress={onPress}
-            className={`${
-              isSelected ? "bg-green-500" : "bg-indigo-500"
-            } rounded-full py-2 px-4`}
           >
-            <Text className="text-white text-center">
-              {isSelected ? "Seçildi" : "Gruba Ekle"}
-            </Text>
+            {isSelected ? (
+              <AntDesign name="checkcircle" size={24} color="green" />
+            ) : (
+              <AntDesign name="pluscircle" size={24} color="#3F51B5" />
+            )}
           </TouchableOpacity>
         </View>
       </View>

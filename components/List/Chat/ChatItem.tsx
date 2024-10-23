@@ -23,6 +23,51 @@ const ChatItem = ({ chat, onSelectChat }) => {
     dispatch(setActiveChat(chat));
   };
 
+  const renderMessageContent = () => {
+    if (chat?.lastMessage) {
+      return (
+        <>
+          <Text
+            style={{
+              color: isMyMessage ? "gary" : "black",
+              fontWeight: isMyMessage ? "normal" : "bold",
+            }}
+            className="text-sm"
+          >
+            {chat.lastMessage.length > 30
+              ? `${chat.lastMessage.substring(0, 30)}...`
+              : chat.lastMessage}
+          </Text>
+        </>
+      );
+    } else if (chat?.attachment) {
+      const attachmentType = chat.attachment.includes("image")
+        ? "Fotoğraf"
+        : chat.attachment.includes("document")
+        ? "Dosya"
+        : null;
+
+      return (
+        <>
+          {attachmentType === "Fotoğraf" && (
+            <View className="flex-row items-center gap-1">
+              <Ionicons name="image" size={14} color="gray" />
+              <Text className="text-sm">{attachmentType}</Text>
+            </View>
+          )}
+          {attachmentType === "Dosya" && (
+            <View className="flex-row items-center gap-1">
+              <Ionicons name="attach" size={14} color="gray" />
+              <Text className="text-sm">{attachmentType}</Text>
+            </View>
+          )}
+        </>
+      );
+    } else {
+      return <Text className="text-sm font-bold">Bir konuşma başlat!</Text>;
+    }
+  };
+
   return (
     <Pressable
       onPress={handleOpenChatRoom}
@@ -42,19 +87,7 @@ const ChatItem = ({ chat, onSelectChat }) => {
               {isMyMessage && (
                 <Ionicons name="checkmark-done" size={14} color="gray" />
               )}
-              <Text
-                style={{
-                  color: isMyMessage ? "gray" : "black",
-                  fontWeight: isMyMessage ? "normal" : "bold",
-                }}
-                className="text-sm "
-              >
-                {chat?.lastMessage
-                  ? chat.lastMessage.length > 30
-                    ? `${chat.lastMessage.substring(0, 30)}...`
-                    : chat.lastMessage
-                  : "Bir konuşma başlat!"}
-              </Text>
+              {renderMessageContent()}
             </View>
           </View>
 
