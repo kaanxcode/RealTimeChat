@@ -1,4 +1,4 @@
-import ChatRoomHeader from "@/components/ChatRoomHeader";
+import ChatRoomHeader from "@/components/Headers/ChatRoomHeader";
 import MessageList from "@/components/List/Message/MessageList";
 import { chatRef } from "@/firebaseConfig";
 import useDocumentPicker from "@/hooks/useDocumentPicker";
@@ -112,8 +112,6 @@ const ChatRoom = () => {
   return (
     <View className="flex-1 bg-zinc-100">
       <ChatRoomHeader router={router} />
-
-      <View className=" border-b border-zinc-300" />
 
       <View className="flex-1 bg-zinc-100">
         <MessageList

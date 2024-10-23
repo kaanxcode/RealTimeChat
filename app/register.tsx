@@ -1,21 +1,20 @@
+import LoadingComponent from "@/components/LoadingComponent";
+import { register } from "@/redux/slices/authSlice";
+import { getErrorMessage } from "@/utils/firebaseError";
+import { validateRegistration } from "@/utils/validationForm.js";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
-  View,
+  SafeAreaView,
+  StatusBar,
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
-  Alert,
+  View,
 } from "react-native";
-import React, { useState } from "react";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import LoadingComponent from "@/components/LoadingComponent";
-import { useDispatch, useSelector } from "react-redux";
-import { register } from "@/redux/slices/authSlice";
 import Toast from "react-native-toast-message";
-import { validateRegistration } from "@/utils/validationForm.js";
-import { getErrorMessage } from "@/utils/firebaseError";
-import { useRouter } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
 
 const Register = () => {
   const router = useRouter();
@@ -67,11 +66,6 @@ const Register = () => {
   return (
     <SafeAreaView className="flex-1  bg-indigo-500 ">
       <StatusBar barStyle="light-content" />
-      <View className="flex-1 bg-indigo-500 justify-center  px-4">
-        <Text className="text-3xl font-bold text-white tracking-wider">
-          Kayıt Ol
-        </Text>
-      </View>
 
       <View className="flex-[4] bg-white p-6 rounded-tl-[18] rounded-tr-[18] gap-4">
         <Text className="text-3xl text-zinc-900 self-center font-bold tracking-wider ">

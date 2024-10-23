@@ -1,4 +1,4 @@
-import GroupRoomHeader from "@/components/GroupRoomHeader";
+import GroupRoomHeader from "@/components/Headers/GroupRoomHeader";
 import GroupMessageList from "@/components/List/Group/GroupMessage/GroupMessageList";
 import { chatRef, db } from "@/firebaseConfig";
 import useDocumentPicker from "@/hooks/useDocumentPicker";
@@ -128,7 +128,6 @@ const GroupRoom = () => {
   return (
     <View className="flex-1 bg-zinc-100">
       <GroupRoomHeader router={router} />
-      <View className="border-b border-zinc-300" />
 
       <View className="flex-1 bg-zinc-100">
         <GroupMessageList

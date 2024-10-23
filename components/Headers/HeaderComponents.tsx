@@ -1,15 +1,15 @@
-import { View, Text, Platform } from "react-native";
-import React from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Image } from "expo-image";
-import { blurhash } from "../utils/common";
-import MenuItem from "./CustomMenuItem";
-import { Menu, MenuOptions, MenuTrigger } from "react-native-popup-menu";
-import Feather from "@expo/vector-icons/Feather";
-import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/redux/slices/authSlice";
-import Toast from "react-native-toast-message";
+import Feather from "@expo/vector-icons/Feather";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Platform, Text, View } from "react-native";
+import { Menu, MenuOptions, MenuTrigger } from "react-native-popup-menu";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
+import { blurhash } from "../../utils/common";
+import MenuItem from "../CustomMenuItem";
 
 const HeaderComponents = ({ title }) => {
   const ios = Platform.OS === "ios";
@@ -38,7 +38,7 @@ const HeaderComponents = ({ title }) => {
 
   return (
     <View
-      className="flex-row justify-between items-center px-5 py-2 bg-indigo-500 rounded-b-[28px]"
+      className="flex-row justify-between items-center px-5 py-2 bg-indigo-500 rounded-2xl"
       style={{ paddingTop: ios ? top : top + 10 }}
     >
       <View>

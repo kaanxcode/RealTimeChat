@@ -1,4 +1,5 @@
-import StackHeaderComponent from "@/components/StackHeaderComponent";
+import AuthHeader from "@/components/Headers/AuthHeader";
+import StackHeaderComponent from "@/components/Headers/StackHeaderComponent";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { MenuProvider } from "react-native-popup-menu";
@@ -23,9 +24,6 @@ function MainLayout() {
     handleLogin();
   }, [dispatch, isAuthenticated]);
 
-  if (isLoading) {
-    return null;
-  }
   return null;
 }
 
@@ -35,8 +33,14 @@ export default function RootLayout() {
       <Provider store={store}>
         <Stack screenOptions={{ animation: "fade" }}>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="register" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="login"
+            options={{ header: () => <AuthHeader title="GİRİŞ YAP" /> }}
+          />
+          <Stack.Screen
+            name="register"
+            options={{ header: () => <AuthHeader title="KAYIT OL" /> }}
+          />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="stack" options={{ headerShown: false }} />
           <Stack.Screen

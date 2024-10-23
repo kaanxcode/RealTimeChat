@@ -7,7 +7,7 @@ import {
   setGroupChats,
 } from "@/redux/slices/groupChatSlice";
 import React from "react";
-import { View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -45,6 +45,7 @@ const Groups = () => {
 
   return (
     <View className="flex-1 bg-zinc-100">
+      <StatusBar barStyle="light-content" />
       <GroupChatList
         groupChats={groupChats}
         onSelectGroupChat={handleSelectGroupChat}
