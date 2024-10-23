@@ -1,5 +1,4 @@
 import AuthHeader from "@/components/Headers/AuthHeader";
-import StackHeaderComponent from "@/components/Headers/StackHeaderComponent";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { MenuProvider } from "react-native-popup-menu";
@@ -43,35 +42,7 @@ export default function RootLayout() {
           />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="stack" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="modals/forgot-pass"
-            options={{ headerShown: false, presentation: "modal" }}
-          />
-
-          <Stack.Screen
-            name="modals/add-users"
-            options={{
-              presentation: "modal",
-              animation: "slide_from_bottom",
-              header: () => <StackHeaderComponent title="Kullanıcılar" />,
-            }}
-          />
-          <Stack.Screen
-            name="modals/create-group"
-            options={{
-              presentation: "modal",
-              animation: "slide_from_bottom",
-              header: () => <StackHeaderComponent title="Grup Oluştur" />,
-            }}
-          />
-          <Stack.Screen
-            name="modals/group-info"
-            options={{
-              presentation: "modal",
-              animation: "slide_from_bottom",
-              header: () => <StackHeaderComponent title="Grup Bilgileri" />,
-            }}
-          />
+          <Stack.Screen name="modals" options={{ headerShown: false }} />
         </Stack>
         <MainLayout />
         <Toast />
