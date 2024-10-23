@@ -1,5 +1,8 @@
+import LoadingComponent from "@/components/LoadingComponent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import React from "react";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -11,6 +14,35 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const StartPage = () => {
   const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        SplashScreen.preventAutoHideAsync();
+        const token = await AsyncStorage.getItem("token");
+
+        if (!token) {
+          setTimeout(() => {
+            SplashScreen.hideAsync();
+            setIsReady(true);
+          }, 1000);
+        }
+      } catch (error) {
+        console.log("Token kontrol hatası:", error);
+      }
+    };
+
+    checkToken();
+  }, [router]);
+
+  if (!isReady) {
+    return (
+      <View className="flex-1 justify-center items-center bg-zinc-100">
+        <LoadingComponent size={60} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1">
