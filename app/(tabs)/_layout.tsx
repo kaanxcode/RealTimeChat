@@ -1,14 +1,31 @@
-import HeaderComponents from "@/components/HeaderComponents";
+import HeaderComponents from "@/components/Headers/HeaderComponents";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "#3F51B5" }}>
+    <Tabs
+      screenOptions={({ route }) => ({
+        tabBarActiveTintColor: "#3F51B5",
+        tabBarInactiveTintColor: "#8E8E93",
+        tabBarStyle: {
+          backgroundColor: "#f2f2f2",
+          paddingBottom: 10,
+          height: 70,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "600",
+        },
+        tabBarIconStyle: {
+          marginTop: 5,
+        },
+      })}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: "",
+          title: "SOHBET",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               size={28}
@@ -16,14 +33,14 @@ export default function TabLayout() {
               color={color}
             />
           ),
-          header: () => <HeaderComponents title="Sohbet" />,
+          header: () => <HeaderComponents title="SOHBET" />,
         }}
       />
 
       <Tabs.Screen
         name="groups"
         options={{
-          title: "",
+          title: "GRUPLAR",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               size={28}
@@ -31,7 +48,7 @@ export default function TabLayout() {
               color={color}
             />
           ),
-          header: () => <HeaderComponents title="Gruplarım" />,
+          header: () => <HeaderComponents title="GRUPLAR" />,
         }}
       />
     </Tabs>

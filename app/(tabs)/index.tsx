@@ -6,7 +6,7 @@ import useFetchChats from "@/hooks/useFetchChats";
 import { setActiveChat, setChats } from "@/redux/slices/chatSlice";
 import { fetchUserData } from "@/redux/slices/userSlice";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const Chats = () => {
@@ -46,6 +46,7 @@ const Chats = () => {
 
   return (
     <View className="flex-1 bg-zinc-100">
+      <StatusBar barStyle="light-content" />
       <ChatList chats={chats} onSelectChat={handleSelectChat} />
       <PlusButtonComponent route="add-users" />
     </View>

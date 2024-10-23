@@ -3,7 +3,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 import { addChats, fetchUsers } from "@/redux/slices/addUsersSlice";
 import { router } from "expo-router";
 import React, { useEffect } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, StatusBar, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const AddUsers = () => {
@@ -61,6 +61,7 @@ const AddUsers = () => {
 
   return (
     <View className="flex-1 bg-zinc-100">
+      <StatusBar barStyle="light-content" />
       <UserList users={filteredUsers} onPress={handleCreatingChat} />
     </View>
   );

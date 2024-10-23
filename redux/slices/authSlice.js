@@ -70,7 +70,7 @@ export const logout = createAsyncThunk(
     try {
       await signOut(auth);
       await AsyncStorage.removeItem("userToken");
-
+      await AsyncStorage.removeItem("userId");
       return null;
     } catch (error) {
       return rejectWithValue(error.code);
@@ -98,7 +98,9 @@ export const autoLogin = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      if (token) {
+      const userId = await AsyncStorage.getItem("userId");
+
+      if (token && userId) {
         return new Promise((resolve, reject) => {
           const unsubscribe = auth.onAuthStateChanged(
             (user) => {
