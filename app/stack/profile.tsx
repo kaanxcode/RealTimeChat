@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import {
   Alert,
   Image,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -42,7 +43,7 @@ const Profile = () => {
         text2: "Profil resminiz başarıyla güncellendi.",
       });
     } catch (error) {
-      console.log("error", error);
+      console.log("Profile page update user data error", error);
     }
   };
 
@@ -76,8 +77,8 @@ const Profile = () => {
       [
         {
           text: "Vazgeç",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
+          onPress: () => {},
         },
         {
           text: "Evet",
@@ -99,69 +100,74 @@ const Profile = () => {
   }
 
   return (
-    <View className="flex-1 p-6 bg-white gap-10 justify-center">
-      <View className="flex-1 items-center mb-6 justify-end">
-        <Image
-          source={{ uri: userData?.profileImg }}
-          className="w-28 h-28 rounded-full"
-        />
-        <TouchableOpacity onPress={handleUdateProfileImage} className="mt-4">
-          <Text className="text-indigo-500 text-lg font-medium">
-            Profil resmini değiştir
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View className="gap-4">
-        <View className="h-16 flex-row items-center px-4 bg-neutral-100 rounded-2xl">
-          <Text className="text-xl font-medium text-zinc-600">
-            {userData?.email}
-          </Text>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="flex-1 p-6 bg-white gap-10 justify-center">
+        <View className="flex-1 items-center mb-6 justify-end">
+          <Image
+            source={{ uri: userData?.profileImg }}
+            className="w-28 h-28 rounded-full"
+          />
+          <TouchableOpacity onPress={handleUdateProfileImage} className="mt-4">
+            <Text className="text-indigo-500 text-lg font-medium">
+              Profil resmini değiştir
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {showInput ? (
-          <View className="h-16 flex-row items-center justify-between px-4 bg-neutral-100 rounded-2xl">
-            <TextInput
-              placeholder=""
-              className="flex-1 text-md font-semibold  text-zinc-900"
-              placeholderTextColor={"gray"}
-              value={username}
-              onChangeText={(value) => setUsername(value)}
-            />
-            <TouchableOpacity onPress={handleChangeUsername}>
-              <Feather name="send" size={24} color="gray" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="ml-4"
-              onPress={() => setShowInput(false)}
-            >
-              <MaterialIcons name="cancel" size={24} color="red" />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View className="h-16 flex-row items-center justify-between px-4 bg-neutral-100 rounded-2xl">
+        <View className="gap-4">
+          <View className="h-16 flex-row items-center px-4 bg-neutral-100 rounded-2xl">
             <Text className="text-xl font-medium text-zinc-600">
-              {userData?.username}
+              {userData?.email}
             </Text>
-            <TouchableOpacity onPress={() => setShowInput(true)}>
-              <Feather name="edit-3" size={24} color="gray" />
-            </TouchableOpacity>
           </View>
-        )}
-      </View>
 
-      <View className="flex-1 items-center justify-end">
-        <TouchableOpacity
-          onPress={handeDeleteUser}
-          className="flex-row items-center"
-        >
-          <Text className="text-2xl font-bold text-red-500 mr-2">
-            Hesabını Sil
-          </Text>
-          <AntDesign name="deleteuser" size={24} color="red" />
-        </TouchableOpacity>
+          {showInput ? (
+            <View className="h-16 flex-row items-center justify-between px-4 bg-neutral-100 rounded-2xl">
+              <TextInput
+                placeholder=""
+                className="flex-1 text-md font-semibold  text-zinc-900"
+                placeholderTextColor={"gray"}
+                value={username}
+                onChangeText={(value) => setUsername(value)}
+              />
+              <TouchableOpacity onPress={handleChangeUsername}>
+                <Feather name="send" size={24} color="gray" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="ml-4"
+                onPress={() => setShowInput(false)}
+              >
+                <MaterialIcons name="cancel" size={24} color="red" />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View className="h-16 flex-row items-center justify-between px-4 bg-neutral-100 rounded-2xl">
+              <Text className="text-xl font-medium text-zinc-600">
+                {userData?.username}
+              </Text>
+              <TouchableOpacity onPress={() => setShowInput(true)}>
+                <Feather name="edit-3" size={24} color="gray" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        <View className="flex-1 items-center justify-end">
+          <TouchableOpacity
+            onPress={handeDeleteUser}
+            className="flex-row items-center"
+          >
+            <Text className="text-2xl font-bold text-red-500 mr-2">
+              Hesabını Sil
+            </Text>
+            <AntDesign name="deleteuser" size={24} color="red" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -33,11 +33,9 @@ export const sendMessageGroup = createAsyncThunk(
       for (const id of participants) {
         const groupChatsRef = doc(db, "groupChats", id);
         const groupChatsSnapshot = await getDoc(groupChatsRef);
-        console.log("groupChatsSnapshot", groupChatsSnapshot);
 
         if (groupChatsSnapshot.exists()) {
           const groupChatsData = groupChatsSnapshot.data();
-          console.log("groupChatsData", groupChatsData);
 
           const chatIndex = groupChatsData.chats.findIndex(
             (c) => c.chatId === activeGroupChatId
@@ -81,7 +79,6 @@ export const uploadGroupImage = createAsyncThunk(
   }
 );
 
-// grup silme
 export const deleteGroupChat = createAsyncThunk(
   "groupChat/deleteGroupChat",
   async ({ chatId, participants }, { rejectWithValue }) => {

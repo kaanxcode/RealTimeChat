@@ -1,11 +1,11 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import Toast from "react-native-toast-message";
-import { resetPassword } from "@/redux/slices/authSlice"; // resetPassword fonksiyonunun yolu
-import { useRouter } from "expo-router";
+import { resetPassword } from "@/redux/slices/authSlice";
 import { getErrorMessage } from "@/utils/firebaseError";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
 
 const ForgotPasswordModal = () => {
   const [email, setEmail] = useState("");
@@ -20,12 +20,12 @@ const ForgotPasswordModal = () => {
         text1: "Şifreniz sıfırlandı!",
         text2: "E-postanızı kontrol edin.",
       });
-      router.back(); // Modalı kapat
+      router.back();
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Hata!",
-        text2: getErrorMessage(error), // Hata mesajını göster
+        text2: getErrorMessage(error),
       });
     }
   };

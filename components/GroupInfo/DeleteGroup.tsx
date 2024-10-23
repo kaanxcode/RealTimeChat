@@ -17,7 +17,7 @@ const DeleteGroup = ({ chatId, participants }) => {
         [
           {
             text: "İPTAL",
-            onPress: () => console.log("Cancel Pressed"),
+            onPress: () => {},
             style: "cancel",
           },
           {

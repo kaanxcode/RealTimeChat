@@ -12,6 +12,7 @@ import {
   FlatList,
   Image,
   Modal,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -200,146 +201,170 @@ const GroupInfo = () => {
     users?.filter((user) => !participants.includes(user.id));
 
   return (
-    <View className="flex-1 p-6 bg-white gap-4 justify-center">
-      <View className="flex-1 items-center gap-4 justify-start">
-        <Image
-          source={{ uri: groupImage }}
-          className="w-24 h-24 rounded-full"
-        />
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="flex-1 p-6 bg-white gap-4 justify-center">
+        <View className="flex-1 items-center gap-4 justify-start">
+          <Image
+            source={{ uri: groupImage }}
+            className="w-32 h-32 rounded-full"
+          />
 
-        {adminId === userData?.id && (
-          <TouchableOpacity onPress={handleUpdateGroupImage} className="mt-4">
-            <Text className="text-indigo-500 text-md font-medium">
-              Grup resmini değiştir
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        <View className=" w-full gap-4 ">
-          {showInput ? (
-            <View className="h-16 flex-row items-center justify-between px-4 bg-neutral-100 rounded-2xl">
-              <TextInput
-                placeholder=""
-                className="flex-1 text-md font-semibold  text-zinc-900"
-                placeholderTextColor={"gray"}
-                value={groupName}
-                onChangeText={(value) => setGroupName(value)}
-              />
-              <TouchableOpacity onPress={handleChangeGroupname}>
-                <Feather name="send" size={24} color="gray" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="ml-4"
-                onPress={() => setShowInput(false)}
-              >
-                <MaterialIcons name="cancel" size={24} color="red" />
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View className="h-16 flex-row items-center justify-between px-4 bg-indigo-500 rounded-2xl ">
-              <Text className="text-2xl  font-bold text-white">
-                {activeGroupChatName}
+          {adminId === userData?.id && (
+            <TouchableOpacity onPress={handleUpdateGroupImage}>
+              <Text className="text-indigo-500 text-md font-medium">
+                Resmi Değiştir
               </Text>
-              {adminId === userData?.id && (
-                <TouchableOpacity onPress={() => setShowInput(true)}>
-                  <Feather className="" name="edit-3" size={20} color="white" />
-                </TouchableOpacity>
-              )}
-            </View>
+            </TouchableOpacity>
           )}
-        </View>
 
-        <View className="flex-1 w-full ">
-          <View className="flex-row items-center justify-between px-4">
-            <Text className="text-2xl font-bold text-indigo-500">
-              Katılımcılar
-            </Text>
-            {adminId === userData?.id && (
-              <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-                <AntDesign name="pluscircle" size={24} color="indigo" />
-              </TouchableOpacity>
+          <View className=" w-full gap-4 ">
+            {showInput ? (
+              <View className="h-16 flex-row items-center justify-between px-4 bg-neutral-100 rounded-2xl">
+                <TextInput
+                  placeholder=""
+                  className="flex-1 text-md font-semibold  text-zinc-900"
+                  placeholderTextColor={"gray"}
+                  value={groupName}
+                  onChangeText={(value) => setGroupName(value)}
+                />
+                <TouchableOpacity onPress={handleChangeGroupname}>
+                  <Feather name="send" size={24} color="gray" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="ml-4"
+                  onPress={() => setShowInput(false)}
+                >
+                  <MaterialIcons name="cancel" size={24} color="red" />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View className="h-16 flex-row items-center justify-center px-4 bg-indigo-500  rounded-2xl ">
+                <Text className="text-2xl  font-bold text-white">
+                  {activeGroupChatName}
+                </Text>
+                {adminId === userData?.id && (
+                  <TouchableOpacity onPress={() => setShowInput(true)}>
+                    <Feather
+                      className=""
+                      name="edit-3"
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
             )}
           </View>
 
-          <FlatList
-            data={participants}
-            keyExtractor={(item) => item}
-            renderItem={({ item }) => {
-              const username = getParticipantUsername(item);
-              return (
-                <View className="flex-row justify-between items-center p-4 bg-zinc-100 my-2 rounded-md">
-                  <Text className="text-lg font-semibold">{username}</Text>
-                  {adminId !== item && adminId === userData?.id && (
-                    <TouchableOpacity
-                      onPress={() => handleRemoveParticipant(item)}
-                    >
-                      <AntDesign name="deleteuser" size={24} color="red" />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              );
-            }}
-          />
-        </View>
+          <View className="flex-1 w-full ">
+            <View className="flex-row items-center justify-between px-4">
+              <Text className="text-2xl font-bold text-indigo-500">
+                Grup Üyeleri
+              </Text>
+              {adminId === userData?.id && (
+                <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                  <AntDesign name="pluscircle" size={24} color="#3F51B5" />
+                </TouchableOpacity>
+              )}
+            </View>
 
-        {adminId === userData?.id && (
-          <DeleteGroup chatId={activeGroupChatId} participants={participants} />
-        )}
-
-        <Modal
-          animationType="slide"
-          visible={isModalVisible}
-          onRequestClose={() => setIsModalVisible(false)}
-        >
-          <View className="flex-1 justify-center items-center bg-indigo-500 bg-opacity-50 ">
-            <View className="bg-white p-6 rounded-lg w-3/4">
-              <Text className="text-xl font-bold mb-4">Gruba Ekle</Text>
-
-              <FlatList
-                data={getNonParticipants()}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => {
-                  const isSelected = selectedUserIds.includes(item.id);
-                  return (
-                    <TouchableOpacity
-                      className={`flex-row justify-between items-center p-4 my-2 rounded-md ${
-                        isSelected ? "bg-indigo-500" : "bg-zinc-100"
-                      }`}
-                      onPress={() => handleSelectUser(item.id)}
-                    >
-                      <Text
-                        className={`text-lg font-semibold ${
-                          isSelected ? "text-white" : "text-black"
-                        }`}
+            <FlatList
+              data={participants}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => {
+                const username = getParticipantUsername(item);
+                return (
+                  <View className="flex-row justify-between items-center p-4 bg-zinc-100 my-2 rounded-md">
+                    <Text className="text-lg font-semibold">{username}</Text>
+                    {adminId !== item && adminId === userData?.id && (
+                      <TouchableOpacity
+                        onPress={() => handleRemoveParticipant(item)}
                       >
-                        {item.username}
-                      </Text>
-                      {isSelected ? (
-                        <AntDesign name="checkcircle" size={24} color="white" />
-                      ) : (
-                        <AntDesign name="pluscircle" size={24} color="indigo" />
-                      )}
-                    </TouchableOpacity>
-                  );
-                }}
-              />
+                        <AntDesign name="deleteuser" size={24} color="red" />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                );
+              }}
+              scrollEnabled={false}
+            />
+          </View>
 
-              <View className="flex-row justify-end mt-4">
-                <TouchableOpacity
-                  onPress={() => setIsModalVisible(false)}
-                  className="mr-4"
-                >
-                  <Text className="text-red-500">İptal</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleAddParticipants}>
-                  <Text className="text-indigo-500">Ekle</Text>
-                </TouchableOpacity>
+          {adminId === userData?.id && (
+            <DeleteGroup
+              chatId={activeGroupChatId}
+              participants={participants}
+            />
+          )}
+
+          <Modal
+            animationType="slide"
+            visible={isModalVisible}
+            onRequestClose={() => setIsModalVisible(false)}
+          >
+            <View className="flex-1 py-12 justify-center items-center bg-indigo-500 bg-opacity-50 ">
+              <View className="bg-white p-6 rounded-lg w-3/4">
+                <Text className="text-xl font-bold mb-4">Gruba Ekle</Text>
+
+                <FlatList
+                  data={getNonParticipants()}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => {
+                    const isSelected = selectedUserIds.includes(item.id);
+                    return (
+                      <TouchableOpacity
+                        className={`flex-row justify-between items-center p-4 my-2 rounded-md ${
+                          isSelected ? "bg-indigo-500" : "bg-zinc-100"
+                        }`}
+                        onPress={() => handleSelectUser(item.id)}
+                      >
+                        <Text
+                          className={`text-lg font-semibold ${
+                            isSelected ? "text-white" : "text-black"
+                          }`}
+                        >
+                          {item.username}
+                        </Text>
+                        {isSelected ? (
+                          <AntDesign
+                            name="checkcircle"
+                            size={24}
+                            color="white"
+                          />
+                        ) : (
+                          <AntDesign
+                            name="pluscircle"
+                            size={24}
+                            color="#3F51B5"
+                          />
+                        )}
+                      </TouchableOpacity>
+                    );
+                  }}
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
+                />
+
+                <View className="flex-row justify-end mt-4">
+                  <TouchableOpacity
+                    onPress={() => setIsModalVisible(false)}
+                    className="mr-4"
+                  >
+                    <Text className="text-red-500">İptal</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleAddParticipants}>
+                    <Text className="text-indigo-500">Ekle</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

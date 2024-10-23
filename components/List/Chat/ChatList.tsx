@@ -11,6 +11,8 @@ const ChatList = ({ chats, onSelectChat }) => {
         renderItem={({ item }) => (
           <ChatItem chat={item} onSelectChat={onSelectChat} />
         )}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

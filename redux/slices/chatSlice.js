@@ -9,7 +9,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-// Mesaj gönderme aksiyonu
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async (
@@ -134,7 +133,6 @@ const chatSlice = createSlice({
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Ekstra state güncellemeleri yapılabilir
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.isLoading = false;
