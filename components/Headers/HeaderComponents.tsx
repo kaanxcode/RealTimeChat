@@ -27,7 +27,7 @@ const HeaderComponents = ({ title }) => {
       dispatch(logout()).unwrap();
       router.replace("/login");
     } catch (error) {
-      console.log(error);
+      console.log("Header componenet in logout function", error);
       Toast.show({
         type: "error",
         text1: "Hata",
@@ -38,7 +38,7 @@ const HeaderComponents = ({ title }) => {
 
   return (
     <View
-      className="flex-row justify-between items-center px-5 py-2 bg-indigo-500 rounded-2xl"
+      className="flex-row justify-between items-center px-5 py-2 bg-indigo-500 rounded-b-2xl"
       style={{ paddingTop: ios ? top : top + 10 }}
     >
       <View>

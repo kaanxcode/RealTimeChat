@@ -12,7 +12,7 @@ const StackHeaderComponent = ({ title }) => {
 
   return (
     <View
-      className="flex-row justify-between items-center px-5 py-4 bg-indigo-500 rounded-2xl "
+      className="flex-row justify-between items-center px-5 py-4 bg-indigo-500 rounded-b-2xl "
       style={{ paddingTop: ios ? top : top + 10 }}
     >
       <Pressable onPress={() => router.back()} className="mr-auto">

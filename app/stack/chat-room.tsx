@@ -68,12 +68,10 @@ const ChatRoom = () => {
 
       if (document.uri) {
         fileDownloadURL = await uploadFile(document.uri, document.type);
-        console.log("Document uploaded:", document, "URL:", fileDownloadURL);
       }
 
       if (image.uri) {
         fileDownloadURL = await uploadFile(image.uri, image.type);
-        console.log("Image uploaded:", image, "URL:", fileDownloadURL);
       }
 
       dispatch(
@@ -138,7 +136,7 @@ const ChatRoom = () => {
             <Entypo
               name="image"
               size={18}
-              color={image.uri ? "indigo" : "gray"}
+              color={image.uri ? "#3F51B5" : "gray"}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -150,7 +148,7 @@ const ChatRoom = () => {
             <Entypo
               name="attachment"
               size={18}
-              color={document.uri ? "indigo" : "gray"}
+              color={document.uri ? "#3F51B5" : "gray"}
             />
           </TouchableOpacity>
           <TouchableOpacity

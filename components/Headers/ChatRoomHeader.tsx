@@ -77,7 +77,7 @@ const ChatRoomHeader = ({ router }) => {
             style={{
               paddingTop: ios ? top : top + 5,
             }}
-            className="bg-indigo-500 flex-row justify-between items-center px-5 py-4 rounded-2xl"
+            className="bg-indigo-500 flex-row justify-between items-center px-5 py-4 rounded-b-2xl"
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity onPress={() => router.back()}>
@@ -98,7 +98,6 @@ const ChatRoomHeader = ({ router }) => {
                 >
                   {activeChatUser?.username}
                 </Text>
-                <Text style={{ fontSize: 14, color: "lightgray" }}>Online</Text>
               </View>
             </View>
 

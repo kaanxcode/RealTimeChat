@@ -45,7 +45,6 @@ const AddUsers = () => {
     );
   }
 
-  // Kullanıcıların ID'leri ile karşılaştırma yap
   const chatUserIds = new Set(chats.map((chat) => chat.user.id));
   const filteredUsers = users.filter((user) => !chatUserIds.has(user.id));
 

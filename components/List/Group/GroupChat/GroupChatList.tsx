@@ -14,6 +14,8 @@ const GroupChatList = ({ groupChats, onSelectGroupChat }) => {
             onSelectGroupChat={onSelectGroupChat}
           />
         )}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

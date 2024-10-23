@@ -11,6 +11,8 @@ const UserList = ({ users, onPress }) => {
         renderItem={({ item }) => (
           <UserItem user={item} onPress={() => onPress(item)} />
         )}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
