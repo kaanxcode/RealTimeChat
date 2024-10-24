@@ -8,7 +8,6 @@ import {
 } from "@/redux/slices/groupChatSlice";
 import React from "react";
 import { StatusBar, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
 const Groups = () => {
@@ -37,9 +36,9 @@ const Groups = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-zinc-100">
+      <View className="flex-1 justify-center items-center bg-zinc-100">
         <LoadingComponent size={60} />
-      </SafeAreaView>
+      </View>
     );
   }
 
