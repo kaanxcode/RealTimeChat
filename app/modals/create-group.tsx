@@ -95,9 +95,9 @@ const CreateGroup = () => {
 
   if (isLoading || addUsersLoading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-zinc-100">
+      <View className="flex-1 justify-center items-center bg-zinc-100">
         <LoadingComponent size={60} />
-      </SafeAreaView>
+      </View>
     );
   }
 
