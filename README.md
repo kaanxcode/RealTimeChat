@@ -1,50 +1,42 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 📱 REAL TIME CHAT APP
 
-## Get started
+Bu proje, kullanıcıların mesajlaşma, dosya gönderme, grup kurma gibi sosyal aktivitelerde bulunabileceği bir mobil uygulamadır. Uygulama, kullanıcıların bireysel sohbetler yapabilmesinin yanı sıra birden fazla kişiyle grup sohbeti oluşturmasına da olanak tanır.
 
-1. Install dependencies
+> **ℹ️ Not**: Bu proje, Siliconmade Academy'nin Kariyer Master Class eğitimi kapsamında geliştirilmiştir.
 
+### 📥 APK İndirme Linki
+
+[Uygulama APK İndirme Linki](https://www.transfernow.net/dl/20241024VzUOmUA1)
+
+---
+
+## 🚀 Kurulum ve Çalıştırma
+
+1. **Projeyi Klonlayın**:
+   ```bash
+   git clone -b main https://github.com/kaanxcode/RealTimeChat.git
+   cd RealTimeChat
+   ```
+
+2. **Gerekli Paketleri Yükleyin**:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Expo ile Uygulamayı Başlatın**:
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+> 💡 **Not**: Expo uygulamasını indirerek uygulamayı yerel cihazınızda test edebilirsiniz.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 👨‍💻 Geliştirici
 
-## Get a fresh project
+Proje Sahibi: **Mustafa Kaan SEVİNÇ** 👋
 
-When you're ready, run:
+Linkedin: [**KaanxCode**](https://www.linkedin.com/in/kaanxcode/)
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
