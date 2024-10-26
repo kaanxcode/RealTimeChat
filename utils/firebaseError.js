@@ -13,13 +13,10 @@ const firebaseErrorMessages = {
   "auth/invalid-action-code": "Geçersiz kod.",
   "auth/invalid-credential": "Geçersiz kimlik bilgileri.",
   // firestore
-  unauthenticated: "Kimlik doğrulaması başarısız. Lütfen giriş yapın.",
   "permission-denied": "Erişim izni reddedildi.",
   "not-found": "Belirtilen dosya veya klasör bulunamadı.",
   "quota-exceeded": "Depolama kotası aşıldı.",
   "invalid-argument": "Geçersiz argüman.",
-  aborted: "İşlem iptal edildi.",
-  internal: "İç hata. Sunucu tarafında beklenmedik bir hata oluştu.",
   "deadline-exceeded": "İşlem süresi aşıldı.",
   "resource-exhausted": "Kaynak tükenmiş.",
   "data-loss": "Veri kaybı. Veriler kayboldu veya bozuldu.",
